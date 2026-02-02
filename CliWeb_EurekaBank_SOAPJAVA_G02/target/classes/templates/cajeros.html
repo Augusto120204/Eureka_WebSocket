@@ -10,12 +10,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- StompJS para WebSocket -->
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 </head>
 
 <body class="min-h-screen flex flex-col font-['Poppins']">
 
     <nav class="bg-green-900 p-4 text-white">
-        <div class="container mx-auto font-bold text-2xl">EurekaBank</div>
+        <div class="container mx-auto flex justify-between items-center">
+            <span class="font-bold text-2xl">EurekaBank</span>
+            <div class="flex items-center space-x-2">
+                <span id="wsStatus" class="text-xs px-2 py-1 rounded-full bg-yellow-500">Conectando...</span>
+            </div>
+        </div>
     </nav>
 
     <main class="container mx-auto flex items-center justify-center flex-1 py-8 px-4">
@@ -30,9 +37,15 @@
                 <i class="fas fa-check-circle mr-2"></i>
                 <span th:text="${resultado}"></span>
             </div>
-            <div th:if="${error}" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center">
+            <div th:if="${error}" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center" id="serverError">
                 <i class="fas fa-exclamation-circle mr-2"></i>
                 <span th:text="${error}"></span>
+            </div>
+            
+            <!-- Mensaje de error dinámico -->
+            <div id="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center hidden">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span id="errorText"></span>
             </div>
             
             <hr class="mb-6 border-gray-200" />
@@ -47,21 +60,24 @@
             </div>
 
             <!-- Grid de cajeros -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6" th:if="${empleados != null and !empleados.isEmpty()}">
+            <div id="cajerosGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6" th:if="${empleados != null and !empleados.isEmpty()}">
                 <!-- Iterar sobre los empleados -->
-                <a th:each="empleado, iterStat : ${empleados}" 
-                   th:href="@{/seleccionarCajero(cajeroId=${empleado.codigo}, cajeroNombre=${empleado.nombre + ' ' + empleado.paterno})}"
-                   class="p-6 flex flex-col items-center justify-center bg-white rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
+                <div th:each="empleado, iterStat : ${empleados}" 
+                     th:id="'cajero-' + ${empleado.codigo}"
+                     th:data-cajero-id="${empleado.codigo}"
+                     th:data-cajero-nombre="${empleado.nombre + ' ' + empleado.paterno}"
+                     class="cajero-card p-6 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
+                     onclick="seleccionarCajero(this)">
                     <div th:classappend="${iterStat.index % 4 == 0} ? 'bg-blue-100' : (${iterStat.index % 4 == 1} ? 'bg-purple-100' : (${iterStat.index % 4 == 2} ? 'bg-orange-100' : 'bg-teal-100'))"
-                         class="w-20 h-20 rounded-full flex items-center justify-center mb-3">
+                         class="cajero-icon w-20 h-20 rounded-full flex items-center justify-center mb-3">
                         <i th:classappend="${iterStat.index % 4 == 0} ? 'text-blue-600' : (${iterStat.index % 4 == 1} ? 'text-purple-600' : (${iterStat.index % 4 == 2} ? 'text-orange-600' : 'text-teal-600'))"
                            class="fas fa-user-tie text-3xl"></i>
                     </div>
                     <span class="text-center font-semibold text-gray-700" th:text="${empleado.nombre + ' ' + empleado.paterno}">Nombre Apellido</span>
                     <span class="text-sm text-gray-500" th:text="'Cajero ' + ${empleado.codigo}">Cajero X</span>
                     <span class="text-xs text-gray-400" th:text="${empleado.ciudad}">Ciudad</span>
-                    <span class="mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Disponible</span>
-                </a>
+                    <span class="cajero-status mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Disponible</span>
+                </div>
             </div>
 
             <!-- Mensaje si no hay empleados -->
@@ -124,6 +140,210 @@
             </form>
         </div>
     </main>
+
+    <script th:inline="javascript">
+        // Variables globales
+        let stompClient = null;
+        let sessionId = null;
+        let cajerosOcupados = new Set();
+
+        // Generar un ID de sesión único para este cliente
+        function generarSessionId() {
+            return 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Conectar al WebSocket
+        function conectarWebSocket() {
+            sessionId = localStorage.getItem('wsSessionId');
+            if (!sessionId) {
+                sessionId = generarSessionId();
+                localStorage.setItem('wsSessionId', sessionId);
+            }
+
+            const wsUrl = 'ws://' + window.location.host + '/ws-eureka';
+            
+            stompClient = new StompJs.Client({
+                brokerURL: wsUrl,
+                debug: function (str) {
+                    console.log('STOMP: ' + str);
+                },
+                reconnectDelay: 5000,
+                heartbeatIncoming: 4000,
+                heartbeatOutgoing: 4000,
+            });
+
+            stompClient.onConnect = function (frame) {
+                console.log('Conectado: ' + frame);
+                actualizarEstadoConexion(true);
+
+                // Suscribirse al topic de estado
+                stompClient.subscribe('/topic/estado', function (message) {
+                    const estado = JSON.parse(message.body);
+                    procesarMensajeEstado(estado);
+                });
+
+                // Registrar la sesión y solicitar estado inicial
+                // Enviamos el clientSessionId para que el servidor pueda asociarlo con el wsSessionId
+                stompClient.publish({
+                    destination: '/app/estado',
+                    body: JSON.stringify({ clientSessionId: sessionId })
+                });
+            };
+
+            stompClient.onStompError = function (frame) {
+                console.error('Error STOMP: ' + frame.headers['message']);
+                actualizarEstadoConexion(false);
+            };
+
+            stompClient.onWebSocketError = function (error) {
+                console.error('Error WebSocket:', error);
+                actualizarEstadoConexion(false);
+            };
+
+            stompClient.onDisconnect = function () {
+                console.log('Desconectado');
+                actualizarEstadoConexion(false);
+            };
+
+            stompClient.activate();
+        }
+
+        // Actualizar indicador de conexión
+        function actualizarEstadoConexion(conectado) {
+            const statusEl = document.getElementById('wsStatus');
+            if (conectado) {
+                statusEl.textContent = 'En línea';
+                statusEl.className = 'text-xs px-2 py-1 rounded-full bg-green-500';
+            } else {
+                statusEl.textContent = 'Desconectado';
+                statusEl.className = 'text-xs px-2 py-1 rounded-full bg-red-500';
+            }
+        }
+
+        // Procesar mensajes de estado del WebSocket
+        function procesarMensajeEstado(estado) {
+            console.log('Mensaje recibido:', estado);
+            
+            switch (estado.tipo) {
+                case 'ESTADO_COMPLETO':
+                    // Actualizar todos los cajeros
+                    cajerosOcupados = new Set(estado.cajerosOcupados || []);
+                    actualizarTodosLosCajeros();
+                    break;
+                    
+                case 'CAJERO_OCUPADO':
+                    cajerosOcupados.add(estado.cajeroId);
+                    actualizarEstadoCajero(estado.cajeroId, true);
+                    break;
+                    
+                case 'CAJERO_LIBERADO':
+                    cajerosOcupados.delete(estado.cajeroId);
+                    actualizarEstadoCajero(estado.cajeroId, false);
+                    break;
+            }
+        }
+
+        // Actualizar la visualización de todos los cajeros
+        function actualizarTodosLosCajeros() {
+            document.querySelectorAll('.cajero-card').forEach(card => {
+                const cajeroId = card.dataset.cajeroId;
+                const ocupado = cajerosOcupados.has(cajeroId);
+                actualizarVisualizacionCajero(card, ocupado);
+            });
+        }
+
+        // Actualizar estado visual de un cajero específico
+        function actualizarEstadoCajero(cajeroId, ocupado) {
+            const card = document.getElementById('cajero-' + cajeroId);
+            if (card) {
+                actualizarVisualizacionCajero(card, ocupado);
+            }
+        }
+
+        // Actualizar la visualización de un cajero
+        function actualizarVisualizacionCajero(card, ocupado) {
+            const statusEl = card.querySelector('.cajero-status');
+            const iconContainer = card.querySelector('.cajero-icon');
+            
+            if (ocupado) {
+                card.classList.add('opacity-60', 'cursor-not-allowed');
+                card.classList.remove('hover:shadow-xl', 'hover:scale-105');
+                statusEl.textContent = 'Ocupado';
+                statusEl.className = 'cajero-status mt-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full';
+                iconContainer.classList.add('grayscale');
+            } else {
+                card.classList.remove('opacity-60', 'cursor-not-allowed');
+                card.classList.add('hover:shadow-xl', 'hover:scale-105');
+                statusEl.textContent = 'Disponible';
+                statusEl.className = 'cajero-status mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full';
+                iconContainer.classList.remove('grayscale');
+            }
+        }
+
+        // Manejar clic en un cajero
+        async function seleccionarCajero(cardElement) {
+            const cajeroId = cardElement.dataset.cajeroId;
+            const cajeroNombre = cardElement.dataset.cajeroNombre;
+            
+            // Verificar si está ocupado
+            if (cajerosOcupados.has(cajeroId)) {
+                mostrarError('Este cajero está ocupado por otro usuario. Por favor seleccione otro.');
+                return;
+            }
+            
+            try {
+                // Intentar ocupar el cajero
+                const response = await fetch('/api/estado/cajero/ocupar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `cajeroId=${encodeURIComponent(cajeroId)}&cajeroNombre=${encodeURIComponent(cajeroNombre)}&sessionId=${encodeURIComponent(sessionId)}`
+                });
+                
+                const result = await response.json();
+                
+                if (result.exito) {
+                    // Guardar en localStorage para persistencia
+                    localStorage.setItem('cajeroId', cajeroId);
+                    localStorage.setItem('cajeroNombre', cajeroNombre);
+                    
+                    // Redirigir a la página de selección de cajero
+                    window.location.href = `/seleccionarCajero?cajeroId=${encodeURIComponent(cajeroId)}&cajeroNombre=${encodeURIComponent(cajeroNombre)}`;
+                } else {
+                    mostrarError(result.mensaje);
+                }
+            } catch (error) {
+                console.error('Error al ocupar cajero:', error);
+                mostrarError('Error de conexión. Por favor intente nuevamente.');
+            }
+        }
+
+        // Mostrar mensaje de error
+        function mostrarError(mensaje) {
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = mensaje;
+            errorDiv.classList.remove('hidden');
+            
+            // Ocultar después de 5 segundos
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Inicializar al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            conectarWebSocket();
+        });
+
+        // Limpiar al cerrar la página
+        window.addEventListener('beforeunload', function() {
+            if (stompClient && stompClient.connected) {
+                stompClient.deactivate();
+            }
+        });
+    </script>
 </body>
 
 </html>

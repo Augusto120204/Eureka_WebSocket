@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- StompJS para WebSocket -->
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 </head>
 
 <body class="min-h-screen flex flex-col font-['Poppins']">
@@ -19,6 +21,7 @@
             <span class="font-bold text-2xl">EurekaBank</span>
             <div class="flex items-center space-x-4">
                 <span class="text-sm"><i class="fas fa-user-tie mr-1"></i> Cajero: <span th:text="${cajeroNombre}" class="font-semibold">Cajero</span></span>
+                <span id="wsStatus" class="text-xs px-2 py-1 rounded-full bg-yellow-500">Conectando...</span>
             </div>
         </div>
     </nav>
@@ -27,7 +30,7 @@
 
         <div class="max-w-xl w-full bg-green-500 rounded-2xl p-8 shadow-xl">
             <div class="flex items-center justify-between mb-4">
-                <a th:href="@{/cuentas}" class="text-gray-700 hover:text-gray-900 transition text-sm">
+                <a th:href="@{/cuentas}" class="text-gray-700 hover:text-gray-900 transition text-sm" onclick="liberarOperacionActual()">
                     <i class="fas fa-arrow-left mr-1"></i> Cambiar Cuenta
                 </a>
             </div>
@@ -43,50 +46,340 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Cuenta Seleccionada</p>
-                            <p class="font-semibold text-gray-800 font-mono" th:text="${cuentaSeleccionada}">000000000000</p>
+                            <p id="cuentaActual" class="font-semibold text-gray-800 font-mono" th:text="${cuentaSeleccionada}">000000000000</p>
                         </div>
                     </div>
                     <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">Activa</span>
                 </div>
             </div>
             
+            <!-- Mensaje de error dinámico -->
+            <div id="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center hidden">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span id="errorText"></span>
+            </div>
+            
             <p class="mb-6 text-gray-600 text-center">Selecciona la acción que deseas realizar:</p>
             <hr class="mb-6 border-gray-200" />
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <a th:href="@{/verMovimientos}"
-                    class="p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform">
-                    <img th:src="@{/img/movimientos.png}" alt="Movimientos" class="w-16 h-16 object-contain mb-2" />
+                <div id="op-movimientos" 
+                     data-operacion="movimientos"
+                     class="operacion-card p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
+                     onclick="seleccionarOperacion('movimientos', '/verMovimientos')">
+                    <img th:src="@{/img/movimientos.png}" alt="Movimientos" class="operacion-icon w-16 h-16 object-contain mb-2" />
                     <span class="text-center font-semibold text-sm">Ver Saldo y Movimientos</span>
-                </a>
+                    <span class="operacion-status mt-1 text-xs text-green-600 hidden"></span>
+                </div>
 
-                <a th:href="@{/deposito}"
-                    class="p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform">
-                    <img th:src="@{/img/deposito.png}" alt="Depósito" class="w-16 h-16 object-contain mb-2" />
+                <div id="op-deposito" 
+                     data-operacion="deposito"
+                     class="operacion-card p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
+                     onclick="seleccionarOperacion('deposito', '/deposito')">
+                    <img th:src="@{/img/deposito.png}" alt="Depósito" class="operacion-icon w-16 h-16 object-contain mb-2" />
                     <span class="text-center font-semibold text-sm">Hacer Depósito</span>
-                </a>
+                    <span class="operacion-status mt-1 text-xs text-green-600 hidden"></span>
+                </div>
 
-                <a th:href="@{/retiro}"
-                    class="p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform">
-                    <img th:src="@{/img/retiro.png}" alt="Retiro" class="w-16 h-16 object-contain mb-2" />
+                <div id="op-retiro" 
+                     data-operacion="retiro"
+                     class="operacion-card p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
+                     onclick="seleccionarOperacion('retiro', '/retiro')">
+                    <img th:src="@{/img/retiro.png}" alt="Retiro" class="operacion-icon w-16 h-16 object-contain mb-2" />
                     <span class="text-center font-semibold text-sm">Hacer Retiro</span>
-                </a>
+                    <span class="operacion-status mt-1 text-xs text-green-600 hidden"></span>
+                </div>
 
-                <a th:href="@{/transferencia}"
-                    class="p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform">
-                    <img th:src="@{/img/transferencia.png}" alt="Transferencia" class="w-16 h-16 object-contain mb-2" />
+                <div id="op-transferencia" 
+                     data-operacion="transferencia"
+                     class="operacion-card p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
+                     onclick="seleccionarOperacion('transferencia', '/transferencia')">
+                    <img th:src="@{/img/transferencia.png}" alt="Transferencia" class="operacion-icon w-16 h-16 object-contain mb-2" />
                     <span class="text-center font-semibold text-sm">Hacer Transferencia</span>
-                </a>
+                    <span class="operacion-status mt-1 text-xs text-green-600 hidden"></span>
+                </div>
             </div>
 
             <form th:action="@{/logout}" method="post" class="mt-8 text-center">
-                <button type="submit"
+                <button type="submit" onclick="liberarTodo()"
                     class="text-sm text-gray-600 hover:text-gray-800 font-medium transition duration-150">
                     <i class="fas fa-sign-out-alt mr-1"></i> Cerrar Sesión
                 </button>
             </form>
         </div>
     </main>
+
+    <script th:inline="javascript">
+        // Variables globales
+        let stompClient = null;
+        let sessionId = localStorage.getItem('wsSessionId');
+        let cuentaActual = [[${cuentaSeleccionada}]];
+        let operacionesBloqueadas = {}; // cuenta -> Set de operaciones bloqueadas
+
+        // Conectar al WebSocket
+        function conectarWebSocket() {
+            const wsUrl = 'ws://' + window.location.host + '/ws-eureka';
+            
+            stompClient = new StompJs.Client({
+                brokerURL: wsUrl,
+                debug: function (str) {
+                    console.log('STOMP: ' + str);
+                },
+                reconnectDelay: 5000,
+                heartbeatIncoming: 4000,
+                heartbeatOutgoing: 4000,
+            });
+
+            stompClient.onConnect = function (frame) {
+                console.log('Conectado: ' + frame);
+                actualizarEstadoConexion(true);
+
+                // Suscribirse al topic de estado
+                stompClient.subscribe('/topic/estado', function (message) {
+                    const estado = JSON.parse(message.body);
+                    procesarMensajeEstado(estado);
+                });
+
+                // Registrar la sesión y solicitar estado inicial
+                stompClient.publish({
+                    destination: '/app/estado',
+                    body: JSON.stringify({ clientSessionId: sessionId })
+                });
+            };
+
+            stompClient.onStompError = function (frame) {
+                console.error('Error STOMP: ' + frame.headers['message']);
+                actualizarEstadoConexion(false);
+            };
+
+            stompClient.onWebSocketError = function (error) {
+                console.error('Error WebSocket:', error);
+                actualizarEstadoConexion(false);
+            };
+
+            stompClient.activate();
+        }
+
+        // Actualizar indicador de conexión
+        function actualizarEstadoConexion(conectado) {
+            const statusEl = document.getElementById('wsStatus');
+            if (conectado) {
+                statusEl.textContent = 'En línea';
+                statusEl.className = 'text-xs px-2 py-1 rounded-full bg-green-500';
+            } else {
+                statusEl.textContent = 'Desconectado';
+                statusEl.className = 'text-xs px-2 py-1 rounded-full bg-red-500';
+            }
+        }
+
+        // Procesar mensajes de estado del WebSocket
+        function procesarMensajeEstado(estado) {
+            console.log('Mensaje recibido:', estado);
+            
+            switch (estado.tipo) {
+                case 'ESTADO_COMPLETO':
+                    operacionesBloqueadas = estado.operacionesBloqueadas || {};
+                    actualizarTodasLasOperaciones();
+                    break;
+                    
+                case 'OPERACION_BLOQUEADA':
+                    if (!operacionesBloqueadas[estado.cuenta]) {
+                        operacionesBloqueadas[estado.cuenta] = new Set();
+                    }
+                    if (Array.isArray(operacionesBloqueadas[estado.cuenta])) {
+                        operacionesBloqueadas[estado.cuenta] = new Set(operacionesBloqueadas[estado.cuenta]);
+                    }
+                    operacionesBloqueadas[estado.cuenta].add(estado.operacion);
+                    // Solo actualizar UI si es para MI cuenta actual
+                    if (estado.cuenta === cuentaActual) {
+                        actualizarEstadoOperacion(estado.operacion, true, estado.sessionId);
+                    }
+                    break;
+                    
+                case 'OPERACION_LIBERADA':
+                    if (operacionesBloqueadas[estado.cuenta]) {
+                        if (Array.isArray(operacionesBloqueadas[estado.cuenta])) {
+                            operacionesBloqueadas[estado.cuenta] = new Set(operacionesBloqueadas[estado.cuenta]);
+                        }
+                        operacionesBloqueadas[estado.cuenta].delete(estado.operacion);
+                    }
+                    // Solo actualizar UI si es para MI cuenta actual
+                    if (estado.cuenta === cuentaActual) {
+                        actualizarEstadoOperacion(estado.operacion, false, null);
+                    }
+                    break;
+            }
+        }
+
+        // Actualizar todas las operaciones
+        function actualizarTodasLasOperaciones() {
+            const operaciones = ['movimientos', 'deposito', 'retiro', 'transferencia'];
+            const bloqueadasCuenta = operacionesBloqueadas[cuentaActual];
+            
+            operaciones.forEach(op => {
+                let bloqueada = false;
+                if (bloqueadasCuenta) {
+                    if (Array.isArray(bloqueadasCuenta)) {
+                        bloqueada = bloqueadasCuenta.includes(op);
+                    } else if (bloqueadasCuenta instanceof Set) {
+                        bloqueada = bloqueadasCuenta.has(op);
+                    }
+                }
+                actualizarVisualizacionOperacion(op, bloqueada);
+            });
+        }
+
+        // Actualizar estado de una operación específica
+        function actualizarEstadoOperacion(operacion, bloqueada, ownerSessionId) {
+            // Solo actualizar si es para la cuenta actual
+            const bloqueadaPorOtro = bloqueada && ownerSessionId !== sessionId;
+            actualizarVisualizacionOperacion(operacion, bloqueadaPorOtro);
+        }
+
+        // Actualizar visualización de una operación
+        function actualizarVisualizacionOperacion(operacion, bloqueada) {
+            const card = document.getElementById('op-' + operacion);
+            if (!card) return;
+            
+            const statusEl = card.querySelector('.operacion-status');
+            const iconEl = card.querySelector('.operacion-icon');
+            
+            if (bloqueada) {
+                card.classList.add('opacity-60', 'cursor-not-allowed');
+                card.classList.remove('hover:shadow-lg', 'hover:scale-105');
+                statusEl.textContent = 'En uso por otro cajero';
+                statusEl.classList.remove('hidden', 'text-green-600');
+                statusEl.classList.add('text-red-600');
+                if (iconEl) iconEl.classList.add('grayscale');
+            } else {
+                card.classList.remove('opacity-60', 'cursor-not-allowed');
+                card.classList.add('hover:shadow-lg', 'hover:scale-105');
+                statusEl.classList.add('hidden');
+                if (iconEl) iconEl.classList.remove('grayscale');
+            }
+        }
+
+        // Verificar si una operación está bloqueada por otro
+        function estaOperacionBloqueadaPorOtro(operacion) {
+            const bloqueadasCuenta = operacionesBloqueadas[cuentaActual];
+            if (!bloqueadasCuenta) return false;
+            
+            if (Array.isArray(bloqueadasCuenta)) {
+                return bloqueadasCuenta.includes(operacion);
+            } else if (bloqueadasCuenta instanceof Set) {
+                return bloqueadasCuenta.has(operacion);
+            }
+            return false;
+        }
+
+        // Manejar selección de operación
+        async function seleccionarOperacion(operacion, url) {
+            // Verificar si está bloqueada
+            if (estaOperacionBloqueadaPorOtro(operacion)) {
+                mostrarError('Esta operación está siendo realizada por otro cajero. Por favor espere.');
+                return;
+            }
+            
+            try {
+                // Bloquear la operación
+                const response = await fetch('/api/estado/operacion/bloquear', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `cuenta=${encodeURIComponent(cuentaActual)}&operacion=${encodeURIComponent(operacion)}&sessionId=${encodeURIComponent(sessionId)}`
+                });
+                
+                const result = await response.json();
+                
+                if (result.exito) {
+                    // Guardar operación actual para liberarla después
+                    localStorage.setItem('operacionActual', operacion);
+                    localStorage.setItem('cuentaOperacion', cuentaActual);
+                    
+                    // Redirigir
+                    window.location.href = url;
+                } else {
+                    mostrarError(result.mensaje);
+                }
+            } catch (error) {
+                console.error('Error al bloquear operación:', error);
+                mostrarError('Error de conexión. Por favor intente nuevamente.');
+            }
+        }
+
+        // Liberar operación actual (cuando vuelve al menú o cambia de cuenta)
+        async function liberarOperacionActual() {
+            const operacion = localStorage.getItem('operacionActual');
+            const cuenta = localStorage.getItem('cuentaOperacion');
+            
+            if (operacion && cuenta && sessionId) {
+                try {
+                    await fetch('/api/estado/operacion/liberar', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `cuenta=${encodeURIComponent(cuenta)}&operacion=${encodeURIComponent(operacion)}&sessionId=${encodeURIComponent(sessionId)}`
+                    });
+                } catch (error) {
+                    console.error('Error al liberar operación:', error);
+                }
+                
+                localStorage.removeItem('operacionActual');
+                localStorage.removeItem('cuentaOperacion');
+            }
+        }
+
+        // Liberar todo (al cerrar sesión)
+        async function liberarTodo() {
+            await liberarOperacionActual();
+            
+            // Liberar cajero
+            const cajeroId = localStorage.getItem('cajeroId');
+            if (cajeroId) {
+                try {
+                    await fetch('/api/estado/cajero/liberar', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `cajeroId=${encodeURIComponent(cajeroId)}`
+                    });
+                } catch (error) {
+                    console.error('Error al liberar cajero:', error);
+                }
+                
+                localStorage.removeItem('cajeroId');
+                localStorage.removeItem('cajeroNombre');
+            }
+        }
+
+        // Mostrar mensaje de error
+        function mostrarError(mensaje) {
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = mensaje;
+            errorDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            conectarWebSocket();
+            
+            // NO liberar operación aquí - se libera automáticamente cuando el usuario
+            // sale de la página de operaciones
+        });
+
+        // Limpiar al cerrar la página
+        window.addEventListener('beforeunload', function() {
+            // No hacer nada aquí, las operaciones se liberan al desconectar el WebSocket
+        });
+    </script>
 </body>
 
 </html>

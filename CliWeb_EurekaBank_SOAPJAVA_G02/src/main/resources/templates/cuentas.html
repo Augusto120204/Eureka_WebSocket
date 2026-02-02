@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- StompJS para WebSocket -->
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 </head>
 
 <body class="min-h-screen flex flex-col font-['Poppins']">
@@ -27,7 +29,7 @@
 
         <div class="max-w-3xl w-full bg-green-500 rounded-2xl p-8 shadow-xl">
             <div class="flex items-center justify-between mb-4">
-                <a th:href="@{/cajeros}" class="text-gray-700 hover:text-gray-900 transition">
+                <a th:href="@{/cajeros}" onclick="liberarCajero()" class="text-gray-700 hover:text-gray-900 transition">
                     <i class="fas fa-arrow-left mr-2"></i> Cambiar Cajero
                 </a>
             </div>
@@ -65,13 +67,65 @@
             </div>
 
             <form th:action="@{/logout}" method="post" class="mt-8 text-center">
-                <button type="submit"
+                <button type="submit" onclick="liberarCajero()"
                     class="text-sm text-gray-600 hover:text-gray-800 font-medium transition duration-150">
                     <i class="fas fa-sign-out-alt mr-1"></i> Cerrar Sesión
                 </button>
             </form>
         </div>
     </main>
+
+    <script>
+        // Variables globales
+        let stompClient = null;
+        let sessionId = localStorage.getItem('wsSessionId');
+        
+        // Conectar al WebSocket para mantener la sesión viva
+        function conectarWebSocket() {
+            const wsUrl = 'ws://' + window.location.host + '/ws-eureka';
+            
+            stompClient = new StompJs.Client({
+                brokerURL: wsUrl,
+                debug: function (str) {
+                    console.log('STOMP: ' + str);
+                },
+                reconnectDelay: 5000,
+                heartbeatIncoming: 4000,
+                heartbeatOutgoing: 4000,
+            });
+
+            stompClient.onConnect = function (frame) {
+                console.log('Conectado: ' + frame);
+                // Registrar la sesión
+                stompClient.publish({
+                    destination: '/app/estado',
+                    body: JSON.stringify({ clientSessionId: sessionId })
+                });
+            };
+
+            stompClient.activate();
+        }
+        
+        // Función para liberar el cajero
+        function liberarCajero() {
+            const cajeroId = localStorage.getItem('cajeroId');
+            
+            if (cajeroId) {
+                const data = new URLSearchParams();
+                data.append('cajeroId', cajeroId);
+                navigator.sendBeacon('/api/estado/cajero/liberar', data);
+                
+                localStorage.removeItem('cajeroId');
+                localStorage.removeItem('cajeroNombre');
+                console.log('Cajero liberado: ' + cajeroId);
+            }
+        }
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            conectarWebSocket();
+        });
+    </script>
 </body>
 
 </html>
