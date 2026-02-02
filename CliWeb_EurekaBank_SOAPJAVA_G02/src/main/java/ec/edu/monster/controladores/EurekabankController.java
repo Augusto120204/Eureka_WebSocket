@@ -4,6 +4,7 @@ import ec.edu.monster.modelo.OperacionViewModel;
 import ec.edu.monster.modelo.CuentaViewModel;
 import ec.edu.monster.modelos.MovimientoViewDTO;
 import ec.edu.monster.servicios.EurekaService;
+import ec.edu.monster.ws.conuni.Empleado;
 import ec.edu.monster.ws.conuni.Movimiento;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -39,13 +40,8 @@ public class EurekabankController {
         Map.entry("010", "Cargo por Movimiento")
     );
 
-    // --- Definiciones Estáticas de Nombres de Cajeros ---
-    private static final Map<Integer, String> CAJEROS = Map.of(
-        1, "María García",
-        2, "Carlos López",
-        3, "Ana Martínez",
-        4, "Pedro Sánchez"
-    );
+    // Cantidad de cajeros por página
+    private static final int CAJEROS_POR_PAGINA = 4;
 
     public EurekabankController(EurekaService eurekaService) {
         this.eurekaService = eurekaService;
@@ -71,12 +67,45 @@ public class EurekabankController {
 
     // --- GET: Página de Cajeros ---
     @GetMapping("/cajeros")
-    public String mostrarCajeros(HttpSession session, Model model) {
+    public String mostrarCajeros(
+            @RequestParam(value = "pagina", defaultValue = "1") int pagina,
+            HttpSession session, 
+            Model model) {
         String authCheck = checkAuth(session);
         if (authCheck != null) return authCheck;
         
         String usuario = (String) session.getAttribute("usuarioLogueado");
         model.addAttribute("usuarioLogueado", usuario != null ? usuario : "Usuario");
+        
+        try {
+            // Obtener todos los empleados (el servicio ya filtra el 9999)
+            List<Empleado> todosLosEmpleados = eurekaService.traerEmpleados();
+            
+            // Calcular paginación
+            int totalEmpleados = todosLosEmpleados.size();
+            int totalPaginas = (int) Math.ceil((double) totalEmpleados / CAJEROS_POR_PAGINA);
+            
+            // Validar número de página
+            if (pagina < 1) pagina = 1;
+            if (pagina > totalPaginas && totalPaginas > 0) pagina = totalPaginas;
+            
+            // Obtener empleados de la página actual
+            int inicio = (pagina - 1) * CAJEROS_POR_PAGINA;
+            int fin = Math.min(inicio + CAJEROS_POR_PAGINA, totalEmpleados);
+            
+            List<Empleado> empleadosPagina = todosLosEmpleados.subList(inicio, fin);
+            
+            model.addAttribute("empleados", empleadosPagina);
+            model.addAttribute("paginaActual", pagina);
+            model.addAttribute("totalPaginas", totalPaginas);
+            model.addAttribute("totalEmpleados", totalEmpleados);
+            
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al obtener los cajeros: " + e.getMessage());
+            model.addAttribute("empleados", Collections.emptyList());
+            model.addAttribute("paginaActual", 1);
+            model.addAttribute("totalPaginas", 0);
+        }
         
         return "cajeros";
     }
@@ -84,18 +113,69 @@ public class EurekabankController {
     // --- GET: Seleccionar Cajero ---
     @GetMapping("/seleccionarCajero")
     public String seleccionarCajero(
-            @RequestParam("cajeroId") int cajeroId,
+            @RequestParam("cajeroId") String cajeroId,
+            @RequestParam("cajeroNombre") String cajeroNombre,
             HttpSession session,
             Model model) {
         String authCheck = checkAuth(session);
         if (authCheck != null) return authCheck;
         
         // Guardar el cajero seleccionado en sesión
-        String cajeroNombre = CAJEROS.getOrDefault(cajeroId, "Cajero Desconocido");
         session.setAttribute("cajeroId", cajeroId);
         session.setAttribute("cajeroNombre", cajeroNombre);
         
         return "redirect:/cuentas";
+    }
+
+    // --- GET: Formulario para crear empleado ---
+    @GetMapping("/nuevoEmpleado")
+    public String mostrarFormularioNuevoEmpleado(HttpSession session, Model model) {
+        String authCheck = checkAuth(session);
+        if (authCheck != null) return authCheck;
+        
+        String usuario = (String) session.getAttribute("usuarioLogueado");
+        model.addAttribute("usuarioLogueado", usuario != null ? usuario : "Usuario");
+        
+        return "nuevoEmpleado";
+    }
+
+    // --- POST: Crear nuevo empleado ---
+    @PostMapping("/crearEmpleado")
+    public String crearEmpleado(
+            @RequestParam("codigo") String codigo,
+            @RequestParam("paterno") String paterno,
+            @RequestParam("materno") String materno,
+            @RequestParam("nombre") String nombre,
+            @RequestParam("ciudad") String ciudad,
+            @RequestParam(value = "direccion", required = false, defaultValue = "") String direccion,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        
+        String authCheck = checkAuth(session);
+        if (authCheck != null) return authCheck;
+        
+        // Validaciones básicas
+        if (codigo == null || codigo.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "El código del empleado es obligatorio.");
+            return "redirect:/nuevoEmpleado";
+        }
+        if (codigo.length() > 4) {
+            redirectAttributes.addFlashAttribute("error", "El código no puede tener más de 4 caracteres.");
+            return "redirect:/nuevoEmpleado";
+        }
+        if ("9999".equals(codigo)) {
+            redirectAttributes.addFlashAttribute("error", "El código 9999 está reservado y no puede usarse.");
+            return "redirect:/nuevoEmpleado";
+        }
+        
+        try {
+            eurekaService.crearEmpleado(codigo, paterno, materno, nombre, ciudad, direccion);
+            redirectAttributes.addFlashAttribute("resultado", "Empleado creado exitosamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al crear empleado: " + e.getMessage());
+        }
+        
+        return "redirect:/cajeros";
     }
 
     // --- GET: Página de Cuentas ---
@@ -105,8 +185,8 @@ public class EurekabankController {
         if (authCheck != null) return authCheck;
         
         // Verificar que hay cajero seleccionado
-        Integer cajeroId = (Integer) session.getAttribute("cajeroId");
-        if (cajeroId == null) {
+        String cajeroId = (String) session.getAttribute("cajeroId");
+        if (cajeroId == null || cajeroId.isEmpty()) {
             return "redirect:/cajeros";
         }
         

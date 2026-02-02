@@ -29,14 +29,14 @@ public interface WSEureka {
      * 
      * @param cuenta
      * @return
-     *     returns double
+     *     returns java.util.List<ec.edu.monster.ws.conuni.Movimiento>
      */
     @WebMethod
-    @WebResult(name = "monto", targetNamespace = "")
-    @RequestWrapper(localName = "traerMonto", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerMonto")
-    @ResponseWrapper(localName = "traerMontoResponse", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerMontoResponse")
-    @Action(input = "http://ws.monster.edu.ec/WSEureka/traerMontoRequest", output = "http://ws.monster.edu.ec/WSEureka/traerMontoResponse")
-    public double traerMonto(
+    @WebResult(name = "movimiento", targetNamespace = "")
+    @RequestWrapper(localName = "traerMovimientos", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerMovimientos")
+    @ResponseWrapper(localName = "traerMovimientosResponse", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerMovimientosResponse")
+    @Action(input = "http://ws.monster.edu.ec/WSEureka/traerMovimientosRequest", output = "http://ws.monster.edu.ec/WSEureka/traerMovimientosResponse")
+    public List<Movimiento> traerMovimientos(
         @WebParam(name = "cuenta", targetNamespace = "")
         String cuenta);
 
@@ -57,42 +57,6 @@ public interface WSEureka {
         String cuenta,
         @WebParam(name = "importe", targetNamespace = "")
         double importe);
-
-    /**
-     * 
-     * @param cuentaDestino
-     * @param cuentaOrigen
-     * @param importe
-     * @return
-     *     returns int
-     */
-    @WebMethod
-    @WebResult(name = "resultado", targetNamespace = "")
-    @RequestWrapper(localName = "regTransferencia", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.RegTransferencia")
-    @ResponseWrapper(localName = "regTransferenciaResponse", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.RegTransferenciaResponse")
-    @Action(input = "http://ws.monster.edu.ec/WSEureka/regTransferenciaRequest", output = "http://ws.monster.edu.ec/WSEureka/regTransferenciaResponse")
-    public int regTransferencia(
-        @WebParam(name = "cuentaOrigen", targetNamespace = "")
-        String cuentaOrigen,
-        @WebParam(name = "cuentaDestino", targetNamespace = "")
-        String cuentaDestino,
-        @WebParam(name = "importe", targetNamespace = "")
-        double importe);
-
-    /**
-     * 
-     * @param cuenta
-     * @return
-     *     returns java.util.List<ec.edu.monster.ws.conuni.Movimiento>
-     */
-    @WebMethod
-    @WebResult(name = "movimiento", targetNamespace = "")
-    @RequestWrapper(localName = "traerMovimientos", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerMovimientos")
-    @ResponseWrapper(localName = "traerMovimientosResponse", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerMovimientosResponse")
-    @Action(input = "http://ws.monster.edu.ec/WSEureka/traerMovimientosRequest", output = "http://ws.monster.edu.ec/WSEureka/traerMovimientosResponse")
-    public List<Movimiento> traerMovimientos(
-        @WebParam(name = "cuenta", targetNamespace = "")
-        String cuenta);
 
     /**
      * 
@@ -132,6 +96,27 @@ public interface WSEureka {
 
     /**
      * 
+     * @param cuentaDestino
+     * @param cuentaOrigen
+     * @param importe
+     * @return
+     *     returns int
+     */
+    @WebMethod
+    @WebResult(name = "resultado", targetNamespace = "")
+    @RequestWrapper(localName = "regTransferencia", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.RegTransferencia")
+    @ResponseWrapper(localName = "regTransferenciaResponse", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.RegTransferenciaResponse")
+    @Action(input = "http://ws.monster.edu.ec/WSEureka/regTransferenciaRequest", output = "http://ws.monster.edu.ec/WSEureka/regTransferenciaResponse")
+    public int regTransferencia(
+        @WebParam(name = "cuentaOrigen", targetNamespace = "")
+        String cuentaOrigen,
+        @WebParam(name = "cuentaDestino", targetNamespace = "")
+        String cuentaDestino,
+        @WebParam(name = "importe", targetNamespace = "")
+        double importe);
+
+    /**
+     * 
      * @return
      *     returns java.util.List<java.lang.String>
      */
@@ -141,5 +126,62 @@ public interface WSEureka {
     @ResponseWrapper(localName = "traerCuentasResponse", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerCuentasResponse")
     @Action(input = "http://ws.monster.edu.ec/WSEureka/traerCuentasRequest", output = "http://ws.monster.edu.ec/WSEureka/traerCuentasResponse")
     public List<String> traerCuentas();
+
+    /**
+     * 
+     * @param cuenta
+     * @return
+     *     returns double
+     */
+    @WebMethod
+    @WebResult(name = "monto", targetNamespace = "")
+    @RequestWrapper(localName = "traerMonto", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerMonto")
+    @ResponseWrapper(localName = "traerMontoResponse", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerMontoResponse")
+    @Action(input = "http://ws.monster.edu.ec/WSEureka/traerMontoRequest", output = "http://ws.monster.edu.ec/WSEureka/traerMontoResponse")
+    public double traerMonto(
+        @WebParam(name = "cuenta", targetNamespace = "")
+        String cuenta);
+
+    /**
+     * 
+     * @return
+     *     returns java.util.List<ec.edu.monster.ws.conuni.Empleado>
+     */
+    @WebMethod
+    @WebResult(name = "empleado", targetNamespace = "")
+    @RequestWrapper(localName = "traerEmpleados", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerEmpleados")
+    @ResponseWrapper(localName = "traerEmpleadosResponse", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.TraerEmpleadosResponse")
+    @Action(input = "http://ws.monster.edu.ec/WSEureka/traerEmpleadosRequest", output = "http://ws.monster.edu.ec/WSEureka/traerEmpleadosResponse")
+    public List<Empleado> traerEmpleados();
+
+    /**
+     * 
+     * @param materno
+     * @param codigo
+     * @param paterno
+     * @param ciudad
+     * @param direccion
+     * @param nombre
+     * @return
+     *     returns int
+     */
+    @WebMethod
+    @WebResult(name = "resultado", targetNamespace = "")
+    @RequestWrapper(localName = "crearEmpleado", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.CrearEmpleado")
+    @ResponseWrapper(localName = "crearEmpleadoResponse", targetNamespace = "http://ws.monster.edu.ec/", className = "ec.edu.monster.ws.conuni.CrearEmpleadoResponse")
+    @Action(input = "http://ws.monster.edu.ec/WSEureka/crearEmpleadoRequest", output = "http://ws.monster.edu.ec/WSEureka/crearEmpleadoResponse")
+    public int crearEmpleado(
+        @WebParam(name = "codigo", targetNamespace = "")
+        String codigo,
+        @WebParam(name = "paterno", targetNamespace = "")
+        String paterno,
+        @WebParam(name = "materno", targetNamespace = "")
+        String materno,
+        @WebParam(name = "nombre", targetNamespace = "")
+        String nombre,
+        @WebParam(name = "ciudad", targetNamespace = "")
+        String ciudad,
+        @WebParam(name = "direccion", targetNamespace = "")
+        String direccion);
 
 }

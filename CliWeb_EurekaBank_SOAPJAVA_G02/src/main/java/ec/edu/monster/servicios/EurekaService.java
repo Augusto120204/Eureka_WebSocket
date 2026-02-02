@@ -1,11 +1,13 @@
 package ec.edu.monster.servicios;
 
 import ec.edu.monster.modelo.Usuario;
+import ec.edu.monster.ws.conuni.Empleado;
 import ec.edu.monster.ws.conuni.Movimiento;
 import ec.edu.monster.ws.conuni.WSEureka;
 import ec.edu.monster.ws.conuni.WSEureka_Service;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 /**
@@ -147,6 +149,50 @@ public class EurekaService {
             return lista != null ? lista : Collections.emptyList();
         } catch (Exception e) {
             System.err.println("Error al traer cuentas: " + e.getMessage());
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    /**
+     * Obtiene la lista de todos los empleados.
+     * Excluye el empleado con código "9999".
+     * @return Una lista de objetos Empleado.
+     * @throws Exception Si hay un error de comunicación.
+     */
+    public List<Empleado> traerEmpleados() throws Exception {
+        try {
+            List<Empleado> lista = wsClient.traerEmpleados();
+            if (lista != null) {
+                // Filtrar para excluir el empleado con código 9999
+                return lista.stream()
+                    .filter(emp -> !"9999".equals(emp.getCodigo()))
+                    .collect(Collectors.toList());
+            }
+            return Collections.emptyList();
+        } catch (Exception e) {
+            System.err.println("Error al traer empleados: " + e.getMessage());
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    /**
+     * Crea un nuevo empleado en el sistema.
+     * @param codigo Código del empleado (4 caracteres)
+     * @param paterno Apellido paterno
+     * @param materno Apellido materno
+     * @param nombre Nombre del empleado
+     * @param ciudad Ciudad
+     * @param direccion Dirección (opcional)
+     * @return true si la operación fue exitosa.
+     * @throws Exception Si la operación falla.
+     */
+    public boolean crearEmpleado(String codigo, String paterno, String materno, 
+                                  String nombre, String ciudad, String direccion) throws Exception {
+        try {
+            int resultado = wsClient.crearEmpleado(codigo, paterno, materno, nombre, ciudad, direccion);
+            return resultado == 1;
+        } catch (Exception e) {
+            System.err.println("Error al crear empleado: " + e.getMessage());
             throw new Exception(e.getMessage());
         }
     }

@@ -1,5 +1,6 @@
 package ec.edu.monster.servicio;
 import ec.edu.monster.db.AccesoDB;
+import ec.edu.monster.modelo.Empleado;
 import ec.edu.monster.modelo.Movimiento;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -442,6 +443,113 @@ public class EurekaService {
             throw new RuntimeException("ERROR, en el proceso registrar transferencia, intentelo más tarde.");
         } finally {
             try { if (cn != null) cn.close(); } catch (Exception e) {}
+        }
+    }
+    
+    // ----------------------------------------------------------------------------------
+    // FUNCIONES DE EMPLEADO
+    // ----------------------------------------------------------------------------------
+    
+    /**
+     * Obtiene todos los empleados del sistema.
+     * @return Lista de empleados
+     */
+    public List<Empleado> obtenerTodosLosEmpleados() {
+        Connection cn = null;
+        List<Empleado> empleados = new ArrayList<>();
+        
+        String sql = "SELECT chr_emplcodigo, vch_emplpaterno, vch_emplmaterno, "
+                   + "vch_emplnombre, vch_emplciudad, vch_empldireccion "
+                   + "FROM Empleado "
+                   + "ORDER BY chr_emplcodigo";
+        
+        try {
+            cn = AccesoDB.getConnection();
+            PreparedStatement pstm = cn.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            
+            while (rs.next()) {
+                Empleado emp = new Empleado();
+                emp.setCodigo(rs.getString("chr_emplcodigo"));
+                emp.setPaterno(rs.getString("vch_emplpaterno"));
+                emp.setMaterno(rs.getString("vch_emplmaterno"));
+                emp.setNombre(rs.getString("vch_emplnombre"));
+                emp.setCiudad(rs.getString("vch_emplciudad"));
+                emp.setDireccion(rs.getString("vch_empldireccion"));
+                empleados.add(emp);
+            }
+            
+            rs.close();
+            pstm.close();
+            
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al obtener los empleados: " + e.getMessage());
+        } finally {
+            try {
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+                // Ignorar excepción al cerrar la conexión
+            }
+        }
+        
+        return empleados;
+    }
+    
+    /**
+     * Crea un nuevo empleado en el sistema.
+     * @param empleado El empleado a crear
+     */
+    public void crearEmpleado(Empleado empleado) {
+        Connection cn = null;
+        
+        String sql = "INSERT INTO Empleado (chr_emplcodigo, vch_emplpaterno, vch_emplmaterno, "
+                   + "vch_emplnombre, vch_emplciudad, vch_empldireccion) "
+                   + "VALUES (?, ?, ?, ?, ?, ?)";
+        
+        try {
+            cn = AccesoDB.getConnection();
+            
+            // Validar que el código no exista
+            String sqlVerificar = "SELECT chr_emplcodigo FROM Empleado WHERE chr_emplcodigo = ?";
+            PreparedStatement pstmVerificar = cn.prepareStatement(sqlVerificar);
+            pstmVerificar.setString(1, empleado.getCodigo());
+            ResultSet rsVerificar = pstmVerificar.executeQuery();
+            if (rsVerificar.next()) {
+                rsVerificar.close();
+                pstmVerificar.close();
+                throw new SQLException("ERROR, el código de empleado ya existe: " + empleado.getCodigo());
+            }
+            rsVerificar.close();
+            pstmVerificar.close();
+            
+            // Insertar el empleado
+            PreparedStatement pstm = cn.prepareStatement(sql);
+            pstm.setString(1, empleado.getCodigo());
+            pstm.setString(2, empleado.getPaterno());
+            pstm.setString(3, empleado.getMaterno());
+            pstm.setString(4, empleado.getNombre());
+            pstm.setString(5, empleado.getCiudad());
+            pstm.setString(6, empleado.getDireccion());
+            
+            int filasAfectadas = pstm.executeUpdate();
+            pstm.close();
+            
+            if (filasAfectadas == 0) {
+                throw new SQLException("ERROR, no se pudo crear el empleado");
+            }
+            
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al crear el empleado: " + e.getMessage());
+        } finally {
+            try {
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+                // Ignorar excepción al cerrar la conexión
+            }
         }
     }
 }

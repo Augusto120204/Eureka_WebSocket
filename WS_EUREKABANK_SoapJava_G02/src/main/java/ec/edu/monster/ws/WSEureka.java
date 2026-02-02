@@ -5,6 +5,7 @@
 package ec.edu.monster.ws;
 
 import ec.edu.monster.controlador.Login;
+import ec.edu.monster.modelo.Empleado;
 import ec.edu.monster.modelo.Movimiento;
 import ec.edu.monster.modelo.ResultadoOperacion;
 import ec.edu.monster.servicio.EurekaService;
@@ -165,6 +166,84 @@ public class WSEureka {
             // Captura errores como "saldo insuficiente" o fallos en cuentas
             System.err.println("Error al registrar la transferencia: " + e.getMessage());
             throw new RuntimeException("Fallo en la transferencia: " + e.getMessage()); 
+        }
+    }
+    
+    // ----------------------------------------------------------------------------------
+    // OPERACIONES DE EMPLEADO
+    // ----------------------------------------------------------------------------------
+    
+    /**
+     * Web service operation - Obtiene todos los empleados del sistema
+     * @return Lista de todos los empleados
+     */
+    @WebMethod(operationName = "traerEmpleados")
+    @WebResult(name = "empleado")
+    public List<Empleado> traerEmpleados() {
+        try {
+            EurekaService service = new EurekaService();
+            return service.obtenerTodosLosEmpleados();
+        } catch (RuntimeException e) {
+            System.err.println("Error en traerEmpleados: " + e.getMessage());
+            throw new RuntimeException("Error al consultar empleados: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Web service operation - Crea un nuevo empleado en el sistema
+     * @param codigo Código del empleado (4 caracteres)
+     * @param paterno Apellido paterno
+     * @param materno Apellido materno
+     * @param nombre Nombre del empleado
+     * @param ciudad Ciudad
+     * @param direccion Dirección (opcional)
+     * @return 1 si fue exitoso
+     */
+    @WebMethod(operationName = "crearEmpleado")
+    @WebResult(name = "resultado")
+    public int crearEmpleado(
+            @WebParam(name = "codigo") String codigo,
+            @WebParam(name = "paterno") String paterno,
+            @WebParam(name = "materno") String materno,
+            @WebParam(name = "nombre") String nombre,
+            @WebParam(name = "ciudad") String ciudad,
+            @WebParam(name = "direccion") String direccion) {
+        
+        // Validaciones básicas
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new RuntimeException("El código del empleado es obligatorio.");
+        }
+        if (codigo.length() > 4) {
+            throw new RuntimeException("El código del empleado no puede tener más de 4 caracteres.");
+        }
+        if (paterno == null || paterno.trim().isEmpty()) {
+            throw new RuntimeException("El apellido paterno es obligatorio.");
+        }
+        if (materno == null || materno.trim().isEmpty()) {
+            throw new RuntimeException("El apellido materno es obligatorio.");
+        }
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new RuntimeException("El nombre es obligatorio.");
+        }
+        if (ciudad == null || ciudad.trim().isEmpty()) {
+            throw new RuntimeException("La ciudad es obligatoria.");
+        }
+        
+        try {
+            Empleado empleado = new Empleado();
+            empleado.setCodigo(codigo);
+            empleado.setPaterno(paterno);
+            empleado.setMaterno(materno);
+            empleado.setNombre(nombre);
+            empleado.setCiudad(ciudad);
+            empleado.setDireccion(direccion);
+            
+            EurekaService service = new EurekaService();
+            service.crearEmpleado(empleado);
+            return 1; // Éxito
+        } catch (RuntimeException e) {
+            System.err.println("Error al crear empleado: " + e.getMessage());
+            throw new RuntimeException("Fallo al crear empleado: " + e.getMessage());
         }
     }
 }

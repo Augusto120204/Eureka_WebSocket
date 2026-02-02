@@ -24,52 +24,96 @@
             <h2 class="text-3xl font-bold mb-4 text-gray-800 text-center">Bienvenido a EurekaBank</h2>
             <p class="mb-2 text-gray-700 text-center text-lg">Hola, <span th:text="${usuarioLogueado}" class="font-semibold">Usuario</span></p>
             <p class="mb-6 text-gray-600 text-center">Por favor, selecciona un cajero para ser atendido:</p>
+            
+            <!-- Mensajes de éxito/error -->
+            <div th:if="${resultado}" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg text-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span th:text="${resultado}"></span>
+            </div>
+            <div th:if="${error}" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span th:text="${error}"></span>
+            </div>
+            
             <hr class="mb-6 border-gray-200" />
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- Cajero 1 -->
-                <a th:href="@{/seleccionarCajero(cajeroId=1)}"
-                    class="p-6 flex flex-col items-center justify-center bg-white rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
-                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-3">
-                        <i class="fas fa-user-tie text-blue-600 text-3xl"></i>
-                    </div>
-                    <span class="text-center font-semibold text-gray-700">María García</span>
-                    <span class="text-sm text-gray-500">Cajero 1</span>
-                    <span class="mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Disponible</span>
+            <!-- Botón para agregar nuevo empleado -->
+            <div class="mb-6 text-center">
+                <a th:href="@{/nuevoEmpleado}" 
+                   class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition transform hover:scale-105">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    Agregar Nuevo Cajero
                 </a>
+            </div>
 
-                <!-- Cajero 2 -->
-                <a th:href="@{/seleccionarCajero(cajeroId=2)}"
-                    class="p-6 flex flex-col items-center justify-center bg-white rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
-                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mb-3">
-                        <i class="fas fa-user-tie text-purple-600 text-3xl"></i>
+            <!-- Grid de cajeros -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6" th:if="${empleados != null and !empleados.isEmpty()}">
+                <!-- Iterar sobre los empleados -->
+                <a th:each="empleado, iterStat : ${empleados}" 
+                   th:href="@{/seleccionarCajero(cajeroId=${empleado.codigo}, cajeroNombre=${empleado.nombre + ' ' + empleado.paterno})}"
+                   class="p-6 flex flex-col items-center justify-center bg-white rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
+                    <div th:classappend="${iterStat.index % 4 == 0} ? 'bg-blue-100' : (${iterStat.index % 4 == 1} ? 'bg-purple-100' : (${iterStat.index % 4 == 2} ? 'bg-orange-100' : 'bg-teal-100'))"
+                         class="w-20 h-20 rounded-full flex items-center justify-center mb-3">
+                        <i th:classappend="${iterStat.index % 4 == 0} ? 'text-blue-600' : (${iterStat.index % 4 == 1} ? 'text-purple-600' : (${iterStat.index % 4 == 2} ? 'text-orange-600' : 'text-teal-600'))"
+                           class="fas fa-user-tie text-3xl"></i>
                     </div>
-                    <span class="text-center font-semibold text-gray-700">Carlos López</span>
-                    <span class="text-sm text-gray-500">Cajero 2</span>
+                    <span class="text-center font-semibold text-gray-700" th:text="${empleado.nombre + ' ' + empleado.paterno}">Nombre Apellido</span>
+                    <span class="text-sm text-gray-500" th:text="'Cajero ' + ${empleado.codigo}">Cajero X</span>
+                    <span class="text-xs text-gray-400" th:text="${empleado.ciudad}">Ciudad</span>
                     <span class="mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Disponible</span>
                 </a>
+            </div>
 
-                <!-- Cajero 3 -->
-                <a th:href="@{/seleccionarCajero(cajeroId=3)}"
-                    class="p-6 flex flex-col items-center justify-center bg-white rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
-                    <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mb-3">
-                        <i class="fas fa-user-tie text-orange-600 text-3xl"></i>
-                    </div>
-                    <span class="text-center font-semibold text-gray-700">Ana Martínez</span>
-                    <span class="text-sm text-gray-500">Cajero 3</span>
-                    <span class="mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Disponible</span>
-                </a>
+            <!-- Mensaje si no hay empleados -->
+            <div th:if="${empleados == null or empleados.isEmpty()}" class="text-center py-8">
+                <i class="fas fa-users-slash text-6xl text-gray-400 mb-4"></i>
+                <p class="text-gray-600">No hay cajeros disponibles en este momento.</p>
+            </div>
 
-                <!-- Cajero 4 -->
-                <a th:href="@{/seleccionarCajero(cajeroId=4)}"
-                    class="p-6 flex flex-col items-center justify-center bg-white rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition transform cursor-pointer">
-                    <div class="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mb-3">
-                        <i class="fas fa-user-tie text-teal-600 text-3xl"></i>
-                    </div>
-                    <span class="text-center font-semibold text-gray-700">Pedro Sánchez</span>
-                    <span class="text-sm text-gray-500">Cajero 4</span>
-                    <span class="mt-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Disponible</span>
+            <!-- Paginación -->
+            <div th:if="${totalPaginas > 1}" class="mt-8 flex justify-center items-center space-x-2">
+                <!-- Botón Anterior -->
+                <a th:if="${paginaActual > 1}" 
+                   th:href="@{/cajeros(pagina=${paginaActual - 1})}"
+                   class="px-4 py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition">
+                    <i class="fas fa-chevron-left"></i> Anterior
                 </a>
+                <span th:if="${paginaActual <= 1}" 
+                      class="px-4 py-2 bg-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
+                    <i class="fas fa-chevron-left"></i> Anterior
+                </span>
+
+                <!-- Números de página -->
+                <div class="flex space-x-1">
+                    <span th:each="i : ${#numbers.sequence(1, totalPaginas)}">
+                        <a th:if="${i != paginaActual}"
+                           th:href="@{/cajeros(pagina=${i})}"
+                           th:text="${i}"
+                           class="px-3 py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition">
+                        </a>
+                        <span th:if="${i == paginaActual}"
+                              th:text="${i}"
+                              class="px-3 py-2 bg-green-700 text-white rounded-lg shadow font-bold">
+                        </span>
+                    </span>
+                </div>
+
+                <!-- Botón Siguiente -->
+                <a th:if="${paginaActual < totalPaginas}" 
+                   th:href="@{/cajeros(pagina=${paginaActual + 1})}"
+                   class="px-4 py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition">
+                    Siguiente <i class="fas fa-chevron-right"></i>
+                </a>
+                <span th:if="${paginaActual >= totalPaginas}" 
+                      class="px-4 py-2 bg-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
+                    Siguiente <i class="fas fa-chevron-right"></i>
+                </span>
+            </div>
+
+            <!-- Info de paginación -->
+            <div th:if="${totalEmpleados > 0}" class="mt-4 text-center text-sm text-gray-600">
+                Mostrando página <span th:text="${paginaActual}">1</span> de <span th:text="${totalPaginas}">1</span>
+                (<span th:text="${totalEmpleados}">0</span> cajeros en total)
             </div>
 
             <form th:action="@{/logout}" method="post" class="mt-8 text-center">

@@ -24,6 +24,9 @@ import jakarta.xml.bind.annotation.XmlRegistry;
 @XmlRegistry
 public class ObjectFactory {
 
+    private final static QName _CrearEmpleado_QNAME = new QName("http://ws.monster.edu.ec/", "crearEmpleado");
+    private final static QName _CrearEmpleadoResponse_QNAME = new QName("http://ws.monster.edu.ec/", "crearEmpleadoResponse");
+    private final static QName _Empleado_QNAME = new QName("http://ws.monster.edu.ec/", "empleado");
     private final static QName _Login_QNAME = new QName("http://ws.monster.edu.ec/", "login");
     private final static QName _LoginResponse_QNAME = new QName("http://ws.monster.edu.ec/", "loginResponse");
     private final static QName _Movimiento_QNAME = new QName("http://ws.monster.edu.ec/", "movimiento");
@@ -35,6 +38,8 @@ public class ObjectFactory {
     private final static QName _RegTransferenciaResponse_QNAME = new QName("http://ws.monster.edu.ec/", "regTransferenciaResponse");
     private final static QName _TraerCuentas_QNAME = new QName("http://ws.monster.edu.ec/", "traerCuentas");
     private final static QName _TraerCuentasResponse_QNAME = new QName("http://ws.monster.edu.ec/", "traerCuentasResponse");
+    private final static QName _TraerEmpleados_QNAME = new QName("http://ws.monster.edu.ec/", "traerEmpleados");
+    private final static QName _TraerEmpleadosResponse_QNAME = new QName("http://ws.monster.edu.ec/", "traerEmpleadosResponse");
     private final static QName _TraerMonto_QNAME = new QName("http://ws.monster.edu.ec/", "traerMonto");
     private final static QName _TraerMontoResponse_QNAME = new QName("http://ws.monster.edu.ec/", "traerMontoResponse");
     private final static QName _TraerMovimientos_QNAME = new QName("http://ws.monster.edu.ec/", "traerMovimientos");
@@ -45,6 +50,30 @@ public class ObjectFactory {
      * 
      */
     public ObjectFactory() {
+    }
+
+    /**
+     * Create an instance of {@link CrearEmpleado }
+     * 
+     */
+    public CrearEmpleado createCrearEmpleado() {
+        return new CrearEmpleado();
+    }
+
+    /**
+     * Create an instance of {@link CrearEmpleadoResponse }
+     * 
+     */
+    public CrearEmpleadoResponse createCrearEmpleadoResponse() {
+        return new CrearEmpleadoResponse();
+    }
+
+    /**
+     * Create an instance of {@link Empleado }
+     * 
+     */
+    public Empleado createEmpleado() {
+        return new Empleado();
     }
 
     /**
@@ -136,6 +165,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link TraerEmpleados }
+     * 
+     */
+    public TraerEmpleados createTraerEmpleados() {
+        return new TraerEmpleados();
+    }
+
+    /**
+     * Create an instance of {@link TraerEmpleadosResponse }
+     * 
+     */
+    public TraerEmpleadosResponse createTraerEmpleadosResponse() {
+        return new TraerEmpleadosResponse();
+    }
+
+    /**
      * Create an instance of {@link TraerMonto }
      * 
      */
@@ -165,6 +210,45 @@ public class ObjectFactory {
      */
     public TraerMovimientosResponse createTraerMovimientosResponse() {
         return new TraerMovimientosResponse();
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link CrearEmpleado }{@code >}
+     * 
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link CrearEmpleado }{@code >}
+     */
+    @XmlElementDecl(namespace = "http://ws.monster.edu.ec/", name = "crearEmpleado")
+    public JAXBElement<CrearEmpleado> createCrearEmpleado(CrearEmpleado value) {
+        return new JAXBElement<CrearEmpleado>(_CrearEmpleado_QNAME, CrearEmpleado.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link CrearEmpleadoResponse }{@code >}
+     * 
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link CrearEmpleadoResponse }{@code >}
+     */
+    @XmlElementDecl(namespace = "http://ws.monster.edu.ec/", name = "crearEmpleadoResponse")
+    public JAXBElement<CrearEmpleadoResponse> createCrearEmpleadoResponse(CrearEmpleadoResponse value) {
+        return new JAXBElement<CrearEmpleadoResponse>(_CrearEmpleadoResponse_QNAME, CrearEmpleadoResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Empleado }{@code >}
+     * 
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link Empleado }{@code >}
+     */
+    @XmlElementDecl(namespace = "http://ws.monster.edu.ec/", name = "empleado")
+    public JAXBElement<Empleado> createEmpleado(Empleado value) {
+        return new JAXBElement<Empleado>(_Empleado_QNAME, Empleado.class, null, value);
     }
 
     /**
@@ -308,6 +392,32 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://ws.monster.edu.ec/", name = "traerCuentasResponse")
     public JAXBElement<TraerCuentasResponse> createTraerCuentasResponse(TraerCuentasResponse value) {
         return new JAXBElement<TraerCuentasResponse>(_TraerCuentasResponse_QNAME, TraerCuentasResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link TraerEmpleados }{@code >}
+     * 
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link TraerEmpleados }{@code >}
+     */
+    @XmlElementDecl(namespace = "http://ws.monster.edu.ec/", name = "traerEmpleados")
+    public JAXBElement<TraerEmpleados> createTraerEmpleados(TraerEmpleados value) {
+        return new JAXBElement<TraerEmpleados>(_TraerEmpleados_QNAME, TraerEmpleados.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link TraerEmpleadosResponse }{@code >}
+     * 
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link TraerEmpleadosResponse }{@code >}
+     */
+    @XmlElementDecl(namespace = "http://ws.monster.edu.ec/", name = "traerEmpleadosResponse")
+    public JAXBElement<TraerEmpleadosResponse> createTraerEmpleadosResponse(TraerEmpleadosResponse value) {
+        return new JAXBElement<TraerEmpleadosResponse>(_TraerEmpleadosResponse_QNAME, TraerEmpleadosResponse.class, null, value);
     }
 
     /**

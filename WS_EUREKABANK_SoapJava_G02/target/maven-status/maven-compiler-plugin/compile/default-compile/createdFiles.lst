@@ -6,6 +6,7 @@ ec\edu\monster\servicio\EurekaService.class
 ec\edu\moster\ws_eurekabank_soapjava_g02\JakartaRestConfiguration.class
 ec\edu\monster\db\AccesoDB.class
 ec\edu\moster\ws_eurekabank_soapjava_g02\resources\JakartaEE10Resource.class
+ec\edu\monster\modelo\Empleado.class
 ec\edu\monster\modelo\ResultadoOperacion.class
 ec\edu\monster\test\PruebaLogin.class
 ec\edu\monster\modelo\Usuario.class

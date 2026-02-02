@@ -1,6 +1,7 @@
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\RegTransferencia.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\WSEureka_Service.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\servicios\EurekaService.java
+D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\TraerEmpleadosResponse.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\TraerMovimientos.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\package-info.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\controladores\LoginController.java
@@ -18,8 +19,12 @@ D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\TraerMovimientosResponse.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\ObjectFactory.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\CliwebEurekaBankSoapjavaApplication.java
+D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\CrearEmpleadoResponse.java
+D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\CrearEmpleado.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\RegRetiro.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\modelo\Usuario.java
+D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\Empleado.java
+D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\TraerEmpleados.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\RegTransferenciaResponse.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\LoginResponse.java
 D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\CliWeb_EurekaBank_SOAPJAVA_G02\src\main\java\ec\edu\monster\ws\conuni\TraerCuentas.java
