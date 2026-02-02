@@ -1,0 +1,12 @@
+ec\edu\monster\ws\WSEureka.class
+ec\edu\monster\test\PruebaMovimiento.class
+ec\edu\monster\controlador\Login.class
+ec\edu\monster\modelo\Movimiento.class
+ec\edu\monster\servicio\EurekaService.class
+ec\edu\moster\ws_eurekabank_soapjava_g02\JakartaRestConfiguration.class
+ec\edu\monster\db\AccesoDB.class
+ec\edu\moster\ws_eurekabank_soapjava_g02\resources\JakartaEE10Resource.class
+ec\edu\monster\modelo\ResultadoOperacion.class
+ec\edu\monster\test\PruebaLogin.class
+ec\edu\monster\modelo\Usuario.class
+ec\edu\monster\test\Prueba01.class
