@@ -4,7 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ConUni Java</title>
+    <title>Login - EurekaBank</title>
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#14532d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="EurekaBank">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/img/icon-192x192.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
@@ -107,6 +114,47 @@
 </head>
 
 <body>
+    <!-- Banner de instalación PWA -->
+    <div id="installBanner" class="md:hidden fixed top-0 left-0 right-0 bg-gradient-to-r from-green-700 to-green-900 text-white p-3 z-50 shadow-lg">
+        <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div class="flex items-center space-x-3">
+                <img src="/img/icon-192x192.png" alt="EurekaBank" class="w-10 h-10 rounded-lg">
+                <div>
+                    <p class="font-semibold text-sm">¡Instala EurekaBank!</p>
+                    <p class="text-xs opacity-90" id="installInstructions">Acceso rápido sin barra de navegación</p>
+                </div>
+            </div>
+            <div class="flex space-x-2">
+                <button id="installBtn" class="bg-white text-green-800 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-green-100 transition">
+                    Instalar
+                </button>
+                <button id="closeBanner" class="text-white opacity-70 hover:opacity-100 px-2">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Banner específico para iOS -->
+    <div id="iosBanner" class="hidden fixed top-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-blue-800 text-white p-4 z-50 shadow-lg">
+        <div class="container mx-auto">
+            <div class="flex items-start justify-between">
+                <div class="flex items-center space-x-3">
+                    <img src="/img/icon-192x192.png" alt="EurekaBank" class="w-12 h-12 rounded-xl">
+                    <div>
+                        <p class="font-semibold">Instala EurekaBank</p>
+                        <p class="text-xs opacity-90 mt-1">
+                            Toca <i class="fas fa-share-square"></i> y luego <strong>"Agregar a pantalla de inicio"</strong>
+                        </p>
+                    </div>
+                </div>
+                <button id="closeIosBanner" class="text-white opacity-70 hover:opacity-100 p-1">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <nav class="bg-green-900 p-4 text-white w-full">
         <div class="container mx-auto font-bold text-2xl">EurekaBank</div>
     </nav>
@@ -166,6 +214,137 @@
             </div>
     </div>
     </main>
+
+    <!-- PWA Service Worker Registration & Install Prompt -->
+    <script>
+        let deferredPrompt = null;
+        const installBanner = document.getElementById('installBanner');
+        const installBtn = document.getElementById('installBtn');
+        const closeBanner = document.getElementById('closeBanner');
+        const iosBanner = document.getElementById('iosBanner');
+        const closeIosBanner = document.getElementById('closeIosBanner');
+
+        // Detectar si ya está instalada como PWA
+        function isInstalledPWA() {
+            return window.matchMedia('(display-mode: standalone)').matches || 
+                   window.navigator.standalone === true;
+        }
+
+        // Detectar iOS
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
+        // Detectar si es Safari en iOS
+        function isIOSSafari() {
+            return isIOS() && /Safari/.test(navigator.userAgent) && !/CriOS|FxiOS/.test(navigator.userAgent);
+        }
+
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registrado:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('SW fallo:', error);
+                    });
+            });
+        }
+
+        // Inicializar banners cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('PWA Debug - isInstalledPWA:', isInstalledPWA());
+            console.log('PWA Debug - isIOS:', isIOS());
+            console.log('PWA Debug - dismissed:', sessionStorage.getItem('pwaInstallDismissed'));
+
+            // Si ya está instalada, no mostrar nada
+            if (isInstalledPWA()) {
+                console.log('Ejecutándose como PWA instalada');
+                return;
+            }
+
+            // Si el usuario ya cerró el banner, no mostrar
+            if (sessionStorage.getItem('pwaInstallDismissed')) {
+                return;
+            }
+
+            // Mostrar banner de iOS si es Safari en iOS
+            if (isIOS()) {
+                if (iosBanner) {
+                    iosBanner.classList.remove('hidden');
+                }
+            }
+        });
+
+        // Capturar el evento de instalación (Android/Chrome)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('beforeinstallprompt disparado');
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Ocultar banner de iOS si existe
+            if (iosBanner) {
+                iosBanner.classList.add('hidden');
+            }
+            
+            // Mostrar banner de Android/Chrome
+            if (!isInstalledPWA() && !sessionStorage.getItem('pwaInstallDismissed')) {
+                if (installBanner) {
+                    installBanner.classList.remove('hidden');
+                }
+            }
+        });
+
+        // Botón de instalar (Android/Chrome)
+        if (installBtn) {
+            installBtn.addEventListener('click', async () => {
+                console.log('Botón instalar clickeado, deferredPrompt:', deferredPrompt);
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log('Usuario eligió:', outcome);
+                    deferredPrompt = null;
+                    if (installBanner) {
+                        installBanner.classList.add('hidden');
+                    }
+                } else {
+                    // Si no hay prompt, mostrar instrucciones manuales
+                    alert('Para instalar: Abre el menú del navegador (⋮) y selecciona "Instalar aplicación" o "Agregar a pantalla de inicio"');
+                }
+            });
+        }
+
+        // Cerrar banner Android
+        if (closeBanner) {
+            closeBanner.addEventListener('click', () => {
+                if (installBanner) {
+                    installBanner.classList.add('hidden');
+                }
+                sessionStorage.setItem('pwaInstallDismissed', 'true');
+            });
+        }
+
+        // Cerrar banner iOS
+        if (closeIosBanner) {
+            closeIosBanner.addEventListener('click', () => {
+                if (iosBanner) {
+                    iosBanner.classList.add('hidden');
+                }
+                sessionStorage.setItem('pwaInstallDismissed', 'true');
+            });
+        }
+
+        // Ocultar banner si se instala
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA instalada exitosamente');
+            if (installBanner) {
+                installBanner.classList.add('hidden');
+            }
+            deferredPrompt = null;
+        });
+    </script>
 </body>
 
 </html>

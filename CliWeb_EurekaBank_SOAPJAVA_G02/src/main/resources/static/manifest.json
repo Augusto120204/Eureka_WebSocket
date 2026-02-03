@@ -1,0 +1,43 @@
+﻿{
+  "name": "EurekaBank - Sistema Bancario",
+  "short_name": "EurekaBank",
+  "description": "Sistema de gestión bancaria para cajeros con sincronización en tiempo real",
+  "start_url": "/login",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#14532d",
+  "theme_color": "#14532d",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "id": "/eurekabank",
+  "icons": [
+    {
+      "src": "/img/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/img/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["finance", "business"],
+  "lang": "es",
+  "dir": "ltr",
+  "prefer_related_applications": false
+}
