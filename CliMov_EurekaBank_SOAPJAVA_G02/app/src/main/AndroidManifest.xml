@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CliMov_EurekaBank_SOAPJAVA_G02"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".view.LoginActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".view.MainActivity"/>
+        <!--  CajerosActivity - Selección de cajero  -->
+        <activity android:name=".view.CajerosActivity" android:exported="false" android:parentActivityName=".view.LoginActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".view.LoginActivity"/>
+        </activity>
+        <!--  CuentasActivity - Selección de cuenta  -->
+        <activity android:name=".view.CuentasActivity" android:exported="false" android:parentActivityName=".view.CajerosActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".view.CajerosActivity"/>
+        </activity>
+        <!--  MenuActivity  -->
+        <activity android:name=".view.MenuActivity" android:exported="false" android:parentActivityName=".view.CuentasActivity">
+            <!--  Para el botón de navegación hacia atrás (opcional)  -->
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".view.CuentasActivity"/>
+        </activity>
+        <activity android:name=".view.DepositoActivity" android:exported="false" android:parentActivityName=".view.MenuActivity">
+            <!--  Para el botón de navegación hacia atrás (opcional)  -->
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".view.MenuActivity"/>
+        </activity>
+        <activity android:name=".view.RetiroActivity" android:exported="false" android:parentActivityName=".view.MenuActivity">
+            <!--  Para el botón de navegación hacia atrás (opcional)  -->
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".view.MenuActivity"/>
+        </activity>
+        <activity android:name=".view.MovimientosActivity" android:exported="false" android:parentActivityName=".view.MenuActivity">
+            <!--  Para el botón de navegación hacia atrás (opcional)  -->
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".view.MenuActivity"/>
+        </activity>
+        <activity android:name=".view.CuentaDetalleActivity" android:exported="false" android:parentActivityName=".view.MovimientosActivity">
+            <!--  Para el botón de navegación hacia atrás (opcional)  -->
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".view.MovimientosActivity"/>
+        </activity>
+        <activity android:name=".view.TransferenciaActivity" android:exported="false" android:parentActivityName=".view.MenuActivity">
+            <!--  Para el botón de navegación hacia atrás (opcional)  -->
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".view.MenuActivity"/>
+        </activity>
+    </application>
+
+</manifest>

@@ -7,3 +7,105 @@ target/
 *.iml
 .vscode/
 *.log
+
+# ============================================
+# Android / Gradle
+# ============================================
+
+# Gradle files
+.gradle/
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# Local configuration file (SDK path, etc)
+local.properties
+
+# Android Studio
+*.iml
+.idea/
+*.ipr
+*.iws
+.navigation/
+captures/
+output.json
+.externalNativeBuild
+.cxx/
+
+# NDK
+obj/
+
+# IntelliJ
+out/
+
+# Keystore files (nunca subir al repositorio)
+*.jks
+*.keystore
+
+# Google Services (descomentar si usas Firebase)
+# google-services.json
+
+# Freeline
+freeline.py
+freeline/
+freeline_project_description.json
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/readme.md
+
+# Version control
+vcs.xml
+
+# Lint
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+lint-results*.html
+lint-results*.xml
+
+# Android Profiling
+*.hprof
+
+# APK y AAB files (descomentar si no quieres subir los binarios)
+# *.apk
+# *.aab
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Log files
+*.log
+
+# Backup files
+*~
+*.swp
+*.bak
+*.tmp
+*.orig
+
+# Compiled source
+*.com
+*.dll
+*.exe
+*.o
+*.so
+
+# Archivos temporales de Android Studio
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/.idea/deploymentTargetDropDown.xml

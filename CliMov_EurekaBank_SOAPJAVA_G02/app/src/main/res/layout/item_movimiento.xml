@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/tv_numero_movimiento"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="1"
+        android:textColor="#2C3E50"
+        android:textSize="14sp"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/tv_fecha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:text="12/01/2025"
+        android:textColor="#2C3E50"
+        android:textSize="14sp"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/tv_tipo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="Depósito"
+        android:textColor="#2C3E50"
+        android:textSize="14sp"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/tv_importe"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:text="$100.00"
+        android:textColor="#28A745"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textAlignment="textEnd"
+        android:padding="8dp" />
+
+</LinearLayout>
