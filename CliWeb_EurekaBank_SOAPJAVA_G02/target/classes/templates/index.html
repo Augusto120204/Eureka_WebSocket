@@ -16,11 +16,11 @@
 
 <body class="min-h-screen flex flex-col font-['Poppins']">
 
-    <nav class="bg-green-900 p-4 text-white">
-        <div class="container mx-auto flex justify-between items-center">
-            <span class="font-bold text-2xl">EurekaBank</span>
-            <div class="flex items-center space-x-4">
-                <span class="text-sm"><i class="fas fa-user-tie mr-1"></i> Cajero: <span th:text="${cajeroNombre}" class="font-semibold">Cajero</span></span>
+    <nav class="bg-green-900 p-3 sm:p-4 text-white">
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
+            <span class="font-bold text-xl sm:text-2xl">EurekaBank</span>
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <span class="text-xs sm:text-sm"><i class="fas fa-user-tie mr-1"></i> Cajero: <span th:text="${cajeroNombre}" class="font-semibold">Cajero</span></span>
                 <span id="wsStatus" class="text-xs px-2 py-1 rounded-full bg-yellow-500">Conectando...</span>
             </div>
         </div>
@@ -28,14 +28,14 @@
 
     <main class="container mx-auto flex items-center justify-center flex-1 py-8 px-4">
 
-        <div class="max-w-xl w-full bg-green-500 rounded-2xl p-8 shadow-xl">
+        <div class="max-w-xl w-full bg-green-500 rounded-xl sm:rounded-2xl p-4 sm:p-8 shadow-xl">
             <div class="flex items-center justify-between mb-4">
-                <a th:href="@{/cuentas}" class="text-gray-700 hover:text-gray-900 transition text-sm" onclick="liberarOperacionActual()">
-                    <i class="fas fa-arrow-left mr-1"></i> Cambiar Cuenta
+                <a th:href="@{/cuentas}" class="text-gray-700 hover:text-gray-900 transition text-xs sm:text-sm" onclick="liberarOperacionActual()">
+                    <i class="fas fa-arrow-left mr-1"></i> <span class="hidden sm:inline">Cambiar Cuenta</span><span class="sm:hidden">Atrás</span>
                 </a>
             </div>
             
-            <h2 class="text-3xl font-bold mb-4 text-gray-800 text-center">Panel Principal de Operaciones</h2>
+            <h2 class="text-xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">Panel Principal</h2>
             
             <!-- Información de cuenta seleccionada -->
             <div class="bg-white rounded-lg p-4 mb-6 shadow-md">
@@ -62,40 +62,40 @@
             <p class="mb-6 text-gray-600 text-center">Selecciona la acción que deseas realizar:</p>
             <hr class="mb-6 border-gray-200" />
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-2 gap-3 sm:gap-6">
                 <div id="op-movimientos" 
                      data-operacion="movimientos"
-                     class="operacion-card p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
+                     class="operacion-card p-3 sm:p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
                      onclick="seleccionarOperacion('movimientos', '/verMovimientos')">
-                    <img th:src="@{/img/movimientos.png}" alt="Movimientos" class="operacion-icon w-16 h-16 object-contain mb-2" />
-                    <span class="text-center font-semibold text-sm">Ver Saldo y Movimientos</span>
+                    <img th:src="@{/img/movimientos.png}" alt="Movimientos" class="operacion-icon w-12 h-12 sm:w-16 sm:h-16 object-contain mb-2" />
+                    <span class="text-center font-semibold text-xs sm:text-sm">Ver Saldo</span>
                     <span class="operacion-status mt-1 text-xs text-green-600 hidden"></span>
                 </div>
 
                 <div id="op-deposito" 
                      data-operacion="deposito"
-                     class="operacion-card p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
+                     class="operacion-card p-3 sm:p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
                      onclick="seleccionarOperacion('deposito', '/deposito')">
-                    <img th:src="@{/img/deposito.png}" alt="Depósito" class="operacion-icon w-16 h-16 object-contain mb-2" />
-                    <span class="text-center font-semibold text-sm">Hacer Depósito</span>
+                    <img th:src="@{/img/deposito.png}" alt="Depósito" class="operacion-icon w-12 h-12 sm:w-16 sm:h-16 object-contain mb-2" />
+                    <span class="text-center font-semibold text-xs sm:text-sm">Depósito</span>
                     <span class="operacion-status mt-1 text-xs text-green-600 hidden"></span>
                 </div>
 
                 <div id="op-retiro" 
                      data-operacion="retiro"
-                     class="operacion-card p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
+                     class="operacion-card p-3 sm:p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
                      onclick="seleccionarOperacion('retiro', '/retiro')">
-                    <img th:src="@{/img/retiro.png}" alt="Retiro" class="operacion-icon w-16 h-16 object-contain mb-2" />
-                    <span class="text-center font-semibold text-sm">Hacer Retiro</span>
+                    <img th:src="@{/img/retiro.png}" alt="Retiro" class="operacion-icon w-12 h-12 sm:w-16 sm:h-16 object-contain mb-2" />
+                    <span class="text-center font-semibold text-xs sm:text-sm">Retiro</span>
                     <span class="operacion-status mt-1 text-xs text-green-600 hidden"></span>
                 </div>
 
                 <div id="op-transferencia" 
                      data-operacion="transferencia"
-                     class="operacion-card p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
+                     class="operacion-card p-3 sm:p-4 flex flex-col items-center justify-center bg-white rounded-lg shadow-md transition transform cursor-pointer"
                      onclick="seleccionarOperacion('transferencia', '/transferencia')">
-                    <img th:src="@{/img/transferencia.png}" alt="Transferencia" class="operacion-icon w-16 h-16 object-contain mb-2" />
-                    <span class="text-center font-semibold text-sm">Hacer Transferencia</span>
+                    <img th:src="@{/img/transferencia.png}" alt="Transferencia" class="operacion-icon w-12 h-12 sm:w-16 sm:h-16 object-contain mb-2" />
+                    <span class="text-center font-semibold text-xs sm:text-sm">Transferencia</span>
                     <span class="operacion-status mt-1 text-xs text-green-600 hidden"></span>
                 </div>
             </div>

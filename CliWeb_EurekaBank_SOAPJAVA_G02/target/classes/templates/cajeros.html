@@ -16,9 +16,9 @@
 
 <body class="min-h-screen flex flex-col font-['Poppins']">
 
-    <nav class="bg-green-900 p-4 text-white">
+    <nav class="bg-green-900 p-3 sm:p-4 text-white">
         <div class="container mx-auto flex justify-between items-center">
-            <span class="font-bold text-2xl">EurekaBank</span>
+            <span class="font-bold text-xl sm:text-2xl">EurekaBank</span>
             <div class="flex items-center space-x-2">
                 <span id="wsStatus" class="text-xs px-2 py-1 rounded-full bg-yellow-500">Conectando...</span>
             </div>
@@ -27,8 +27,8 @@
 
     <main class="container mx-auto flex items-center justify-center flex-1 py-8 px-4">
 
-        <div class="max-w-4xl w-full bg-green-500 rounded-2xl p-8 shadow-xl">
-            <h2 class="text-3xl font-bold mb-4 text-gray-800 text-center">Bienvenido a EurekaBank</h2>
+        <div class="max-w-4xl w-full bg-green-500 rounded-xl sm:rounded-2xl p-4 sm:p-8 shadow-xl">
+            <h2 class="text-xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">Bienvenido a EurekaBank</h2>
             <p class="mb-2 text-gray-700 text-center text-lg">Hola, <span th:text="${usuarioLogueado}" class="font-semibold">Usuario</span></p>
             <p class="mb-6 text-gray-600 text-center">Por favor, selecciona un cajero para ser atendido:</p>
             
@@ -53,14 +53,15 @@
             <!-- Botón para agregar nuevo empleado -->
             <div class="mb-6 text-center">
                 <a th:href="@{/nuevoEmpleado}" 
-                   class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition transform hover:scale-105">
+                   class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white text-sm sm:text-base font-semibold rounded-lg shadow-md hover:bg-blue-700 transition transform hover:scale-105">
                     <i class="fas fa-user-plus mr-2"></i>
-                    Agregar Nuevo Cajero
+                    <span class="hidden sm:inline">Agregar Nuevo Cajero</span>
+                    <span class="sm:hidden">Nuevo Cajero</span>
                 </a>
             </div>
 
-            <!-- Grid de cajeros -->
-            <div id="cajerosGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6" th:if="${empleados != null and !empleados.isEmpty()}">
+            <!-- Grid de cajeros - responsive -->
+            <div id="cajerosGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6" th:if="${empleados != null and !empleados.isEmpty()}">
                 <!-- Iterar sobre los empleados -->
                 <div th:each="empleado, iterStat : ${empleados}" 
                      th:id="'cajero-' + ${empleado.codigo}"

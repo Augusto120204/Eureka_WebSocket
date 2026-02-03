@@ -14,13 +14,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 </head>
 
-<body class="min-h-screen flex flex-col font-['Poppins'] py-12">
+<body class="min-h-screen flex flex-col font-['Poppins'] py-4 sm:py-12">
 
-    <nav class="bg-green-900 p-4 text-white">
-        <div class="container mx-auto flex justify-between items-center">
-            <span class="font-bold text-2xl">EurekaBank</span>
-            <div class="flex items-center space-x-4">
-                <span class="text-sm"><i class="fas fa-user-tie mr-1"></i> Cajero: <span th:text="${cajeroNombre}" class="font-semibold">Cajero</span></span>
+    <nav class="bg-green-900 p-3 sm:p-4 text-white">
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
+            <span class="font-bold text-xl sm:text-2xl">EurekaBank</span>
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <span class="text-xs sm:text-sm"><i class="fas fa-user-tie mr-1"></i> Cajero: <span th:text="${cajeroNombre}" class="font-semibold">Cajero</span></span>
                 <span id="wsStatus" class="text-xs px-2 py-1 rounded-full bg-blue-500">Consulta</span>
             </div>
         </div>
@@ -28,9 +28,9 @@
 
     <main class="container mx-auto flex items-center justify-center flex-1 py-8 px-4">
 
-        <div class="max-w-4xl w-full mx-auto p-6 bg-white rounded-xl shadow-lg">
+        <div class="max-w-4xl w-full mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg">
 
-            <h2 class="text-3xl font-bold mb-2 text-gray-800 text-center">Ver Saldo y Movimientos</h2>
+            <h2 class="text-xl sm:text-3xl font-bold mb-2 text-gray-800 text-center">Saldo y Movimientos</h2>
             
             <!-- Información de cuenta seleccionada -->
             <div class="bg-blue-50 rounded-lg p-3 mb-4 border border-blue-200 max-w-md mx-auto">
@@ -65,9 +65,9 @@
                 <h3 class="text-xl font-semibold mb-4 text-gray-700">Resultados para la Cuenta: <span
                         th:text="${cuentaModel.cuentaCodigo}" class="text-blue-700"></span></h3>
 
-                <div class="mb-8 p-4 bg-green-50 border-l-4 border-green-600 rounded-md shadow-inner">
-                    <h4 class="text-lg font-medium text-gray-600">Saldo Actual:</h4>
-                    <p class="text-4xl font-extrabold text-green-700"
+                <div class="mb-6 sm:mb-8 p-3 sm:p-4 bg-green-50 border-l-4 border-green-600 rounded-md shadow-inner">
+                    <h4 class="text-base sm:text-lg font-medium text-gray-600">Saldo Actual:</h4>
+                    <p class="text-2xl sm:text-4xl font-extrabold text-green-700"
                         th:text="${#numbers.formatCurrency(cuentaModel.montoActual)}"></p>
                 </div>
 

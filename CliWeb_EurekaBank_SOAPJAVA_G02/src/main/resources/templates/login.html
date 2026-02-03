@@ -68,19 +68,26 @@
             z-index: 10;
         }
 
-        /* Reajuste de la tarjeta para replicar el estilo de caja */
+        /* Reajuste de la tarjeta para replicar el estilo de caja - responsive */
         .login-card {
-            padding: 50px 40px !important;
+            padding: 30px 20px !important;
             /* Padding del ejemplo de referencia */
             border-radius: 20px !important;
             /* Borde del ejemplo de referencia */
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2) !important;
             /* Sombra del ejemplo */
         }
+        
+        @media (min-width: 640px) {
+            .login-card {
+                padding: 50px 40px !important;
+            }
+        }
 
-        /* Estilo para el logo */
+        /* Estilo para el logo - responsive */
         .logo-image {
-            width: 500px;
+            width: 100%;
+            max-width: 500px;
             /* tamaño como en el cshtml de referencia */
         }
 

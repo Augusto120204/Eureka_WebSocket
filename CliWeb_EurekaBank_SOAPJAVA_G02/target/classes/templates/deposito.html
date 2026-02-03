@@ -16,11 +16,11 @@
 
 <body class="min-h-screen flex flex-col font-['Poppins']">
 
-    <nav class="bg-green-900 p-4 text-white">
-        <div class="container mx-auto flex justify-between items-center">
-            <span class="font-bold text-2xl">EurekaBank</span>
-            <div class="flex items-center space-x-4">
-                <span class="text-sm"><i class="fas fa-user-tie mr-1"></i> Cajero: <span th:text="${cajeroNombre}" class="font-semibold">Cajero</span></span>
+    <nav class="bg-green-900 p-3 sm:p-4 text-white">
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
+            <span class="font-bold text-xl sm:text-2xl">EurekaBank</span>
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <span class="text-xs sm:text-sm"><i class="fas fa-user-tie mr-1"></i> Cajero: <span th:text="${cajeroNombre}" class="font-semibold">Cajero</span></span>
                 <span id="wsStatus" class="text-xs px-2 py-1 rounded-full bg-green-500">Depósito</span>
             </div>
         </div>
@@ -28,8 +28,8 @@
 
     <main class="container mx-auto flex items-center justify-center flex-1 py-8 px-4">
 
-        <div class="max-w-md w-full mx-auto p-6 bg-white rounded-xl shadow-lg">
-            <h2 class="text-3xl font-bold mb-4 text-gray-800 text-center">Operación de Depósito</h2>
+        <div class="max-w-md w-full mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg">
+            <h2 class="text-xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">Depósito</h2>
             
             <!-- Información de cuenta seleccionada -->
             <div class="bg-blue-50 rounded-lg p-3 mb-4 border border-blue-200">
