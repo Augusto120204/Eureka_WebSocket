@@ -105,16 +105,47 @@ public class MenuActivity extends AppCompatActivity implements WebSocketManager.
         android.util.Log.d("MenuActivity", "Transferencia bloqueada: " + transferenciaBloqueada);
         android.util.Log.d("MenuActivity", "Movimientos bloqueado: " + movimientosBloqueado);
         
+        // Actualizar depósito
         btnDeposito.setEnabled(!depositoBloqueado);
+        actualizarEstiloBoton(btnDeposito, !depositoBloqueado);
+        
+        // Actualizar retiro
         btnRetiro.setEnabled(!retiroBloqueado);
+        actualizarEstiloBoton(btnRetiro, !retiroBloqueado);
+        
+        // Actualizar transferencia
         btnTransferencia.setEnabled(!transferenciaBloqueada);
+        actualizarEstiloBoton(btnTransferencia, !transferenciaBloqueada);
+        
+        // Actualizar movimientos
         btnMovimientos.setEnabled(!movimientosBloqueado);
+        actualizarEstiloBoton(btnMovimientos, !movimientosBloqueado);
+    }
+    
+    private void actualizarEstiloBoton(MaterialButton boton, boolean habilitado) {
+        if (habilitado) {
+            boton.setBackgroundResource(R.drawable.bg_login_gradient);
+            boton.setTextColor(getResources().getColor(android.R.color.black));
+            boton.setAlpha(1.0f);
+        } else {
+            boton.setBackgroundResource(R.drawable.bg_button_disabled);
+            boton.setTextColor(getResources().getColor(android.R.color.darker_gray));
+            boton.setAlpha(0.6f);
+        }
     }
     
     private void deshabilitarBotones() {
         btnDeposito.setEnabled(false);
+        actualizarEstiloBoton(btnDeposito, false);
+        
         btnRetiro.setEnabled(false);
+        actualizarEstiloBoton(btnRetiro, false);
+        
         btnTransferencia.setEnabled(false);
+        actualizarEstiloBoton(btnTransferencia, false);
+        
+        btnMovimientos.setEnabled(false);
+        actualizarEstiloBoton(btnMovimientos, false);
     }
 
     private void setupListeners() {
