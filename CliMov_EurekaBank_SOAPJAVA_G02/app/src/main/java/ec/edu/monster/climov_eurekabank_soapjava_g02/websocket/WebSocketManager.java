@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class WebSocketManager {
     private boolean isConnected = false;
     
     private Set<String> cajerosOcupados = new HashSet<>();
-    private Map<String, Set<String>> operacionesBloqueadas;
+    private Map<String, Set<String>> operacionesBloqueadas = new HashMap<>();
     
     private WebSocketListener listener;
     
@@ -167,10 +168,28 @@ public class WebSocketManager {
                     break;
                     
                 case OPERACION_BLOQUEADA:
+                    // Actualizar el mapa interno
+                    if (operacionesBloqueadas != null && estado.getCuenta() != null && estado.getOperacion() != null) {
+                        Set<String> operaciones = operacionesBloqueadas.get(estado.getCuenta());
+                        if (operaciones == null) {
+                            operaciones = new HashSet<>();
+                            operacionesBloqueadas.put(estado.getCuenta(), operaciones);
+                        }
+                        operaciones.add(estado.getOperacion());
+                        Log.d(TAG, "Operación bloqueada actualizada: " + estado.getCuenta() + " - " + estado.getOperacion());
+                    }
                     if (listener != null) listener.onOperacionBloqueada(estado.getCuenta(), estado.getOperacion());
                     break;
                     
                 case OPERACION_LIBERADA:
+                    // Actualizar el mapa interno
+                    if (operacionesBloqueadas != null && estado.getCuenta() != null && estado.getOperacion() != null) {
+                        Set<String> operaciones = operacionesBloqueadas.get(estado.getCuenta());
+                        if (operaciones != null) {
+                            operaciones.remove(estado.getOperacion());
+                            Log.d(TAG, "Operación liberada actualizada: " + estado.getCuenta() + " - " + estado.getOperacion());
+                        }
+                    }
                     if (listener != null) listener.onOperacionLiberada(estado.getCuenta(), estado.getOperacion());
                     break;
             }

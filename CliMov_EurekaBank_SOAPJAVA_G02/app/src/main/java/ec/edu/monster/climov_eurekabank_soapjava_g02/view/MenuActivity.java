@@ -93,9 +93,22 @@ public class MenuActivity extends AppCompatActivity implements WebSocketManager.
         }
         
         // Verificar operaciones bloqueadas
-        btnDeposito.setEnabled(!webSocketManager.isOperacionBloqueada(cuentaActual, "deposito"));
-        btnRetiro.setEnabled(!webSocketManager.isOperacionBloqueada(cuentaActual, "retiro"));
-        btnTransferencia.setEnabled(!webSocketManager.isOperacionBloqueada(cuentaActual, "transferencia"));
+        boolean depositoBloqueado = webSocketManager.isOperacionBloqueada(cuentaActual, "deposito");
+        boolean retiroBloqueado = webSocketManager.isOperacionBloqueada(cuentaActual, "retiro");
+        boolean transferenciaBloqueada = webSocketManager.isOperacionBloqueada(cuentaActual, "transferencia");
+        boolean movimientosBloqueado = webSocketManager.isOperacionBloqueada(cuentaActual, "movimientos");
+        
+        android.util.Log.d("MenuActivity", "=== ACTUALIZAR ESTADO BOTONES ===");
+        android.util.Log.d("MenuActivity", "Cuenta actual: " + cuentaActual);
+        android.util.Log.d("MenuActivity", "Depósito bloqueado: " + depositoBloqueado);
+        android.util.Log.d("MenuActivity", "Retiro bloqueado: " + retiroBloqueado);
+        android.util.Log.d("MenuActivity", "Transferencia bloqueada: " + transferenciaBloqueada);
+        android.util.Log.d("MenuActivity", "Movimientos bloqueado: " + movimientosBloqueado);
+        
+        btnDeposito.setEnabled(!depositoBloqueado);
+        btnRetiro.setEnabled(!retiroBloqueado);
+        btnTransferencia.setEnabled(!transferenciaBloqueada);
+        btnMovimientos.setEnabled(!movimientosBloqueado);
     }
     
     private void deshabilitarBotones() {
