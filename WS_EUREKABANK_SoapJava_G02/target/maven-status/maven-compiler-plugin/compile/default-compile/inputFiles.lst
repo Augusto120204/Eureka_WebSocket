@@ -1,13 +1,13 @@
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\test\PruebaLogin.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\modelo\Movimiento.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\modelo\Usuario.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\db\AccesoDB.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\test\PruebaMovimiento.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\servicio\EurekaService.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\modelo\Empleado.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\test\Prueba01.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\moster\ws_eurekabank_soapjava_g02\resources\JakartaEE10Resource.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\controlador\Login.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\moster\ws_eurekabank_soapjava_g02\JakartaRestConfiguration.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\ws\WSEureka.java
-D:\almacenamiento\Clases ESPE\Semestre 8\29783-ARQUITECTURA DE SOFTWARE\Parcial 3\Prueba\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\modelo\ResultadoOperacion.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\modelo\ResultadoOperacion.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\test\PruebaMovimiento.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\ws\WSEureka.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\servicio\EurekaService.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\test\PruebaLogin.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\moster\ws_eurekabank_soapjava_g02\JakartaRestConfiguration.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\controlador\Login.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\modelo\Empleado.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\test\Prueba01.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\modelo\Usuario.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\db\AccesoDB.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\monster\modelo\Movimiento.java
+C:\Users\User\Downloads\OctavoSemestre\Arquitectura\Eureka_WebSocket\WS_EUREKABANK_SoapJava_G02\src\main\java\ec\edu\moster\ws_eurekabank_soapjava_g02\resources\JakartaEE10Resource.java

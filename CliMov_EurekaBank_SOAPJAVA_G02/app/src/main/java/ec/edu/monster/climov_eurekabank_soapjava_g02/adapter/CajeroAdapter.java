@@ -1,5 +1,4 @@
-﻿package ec.edu.monster.climov_eurekabank_soapjava_g02.adapter;
-
+package ec.edu.monster.climov_eurekabank_soapjava_g02.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
