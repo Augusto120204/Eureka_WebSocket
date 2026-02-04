@@ -96,13 +96,13 @@ public class DepositoActivity extends AppCompatActivity implements DepositoContr
         String cuenta = sessionManager.getCuentaOperacion();
         
         if (operacion != null && cuenta != null) {
-            RestApiClient.getApiService().liberarOperacion(cuenta, operacion)
+            String sessionId = sessionManager.getWsSessionId();
+            RestApiClient.getApiService().liberarOperacion(cuenta, operacion, sessionId)
                 .enqueue(new Callback<ApiResponse>() {
                     @Override
                     public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                         runOnUiThread(() -> {
-                            sessionManager.setOperacionActual(null);
-                            sessionManager.setCuentaOperacion(null);
+                            sessionManager.clearOperacionActual();
                             goToMenu();
                         });
                     }
@@ -110,8 +110,7 @@ public class DepositoActivity extends AppCompatActivity implements DepositoContr
                     @Override
                     public void onFailure(Call<ApiResponse> call, Throwable t) {
                         runOnUiThread(() -> {
-                            sessionManager.setOperacionActual(null);
-                            sessionManager.setCuentaOperacion(null);
+                            sessionManager.clearOperacionActual();
                             goToMenu();
                         });
                     }

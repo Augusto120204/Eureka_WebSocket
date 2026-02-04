@@ -170,8 +170,7 @@ public class MenuActivity extends AppCompatActivity implements WebSocketManager.
                     runOnUiThread(() -> {
                         if (response.isSuccessful() && response.body() != null && response.body().isExito()) {
                             // Guardar operación actual
-                            sessionManager.setOperacionActual(operacion);
-                            sessionManager.setCuentaOperacion(cuentaActual);
+                            sessionManager.setOperacionActual(operacion, cuentaActual);
                             
                             // Ir a la actividad
                             Intent intent = new Intent(MenuActivity.this, pageName);
@@ -197,18 +196,17 @@ public class MenuActivity extends AppCompatActivity implements WebSocketManager.
         String cuenta = sessionManager.getCuentaOperacion();
         
         if (operacion != null && cuenta != null) {
-            RestApiClient.getApiService().liberarOperacion(cuenta, operacion)
+            String sessionId = sessionManager.getWsSessionId();
+            RestApiClient.getApiService().liberarOperacion(cuenta, operacion, sessionId)
                 .enqueue(new Callback<ApiResponse>() {
                     @Override
                     public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                        sessionManager.setOperacionActual(null);
-                        sessionManager.setCuentaOperacion(null);
+                        sessionManager.clearOperacionActual();
                     }
 
                     @Override
                     public void onFailure(Call<ApiResponse> call, Throwable t) {
-                        sessionManager.setOperacionActual(null);
-                        sessionManager.setCuentaOperacion(null);
+                        sessionManager.clearOperacionActual();
                     }
                 });
         }

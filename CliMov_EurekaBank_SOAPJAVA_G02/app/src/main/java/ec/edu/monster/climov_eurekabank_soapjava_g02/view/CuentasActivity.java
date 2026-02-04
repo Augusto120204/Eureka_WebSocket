@@ -62,7 +62,7 @@ public class CuentasActivity extends AppCompatActivity {
         tvError = findViewById(R.id.tv_error);
         progressBar = findViewById(R.id.progress_bar);
         rvCuentas = findViewById(R.id.rv_cuentas);
-        btnCambiarCajero = findViewById(R.id.btn_cambiar_cajero);
+        btnCambiarCajero = findViewById(R.id.btn_back);
     }
     
     private void setupRecyclerView() {

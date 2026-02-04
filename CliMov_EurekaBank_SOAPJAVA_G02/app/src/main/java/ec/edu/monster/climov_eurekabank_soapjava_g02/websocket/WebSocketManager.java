@@ -187,6 +187,14 @@ public class WebSocketManager {
         return cajerosOcupados;
     }
     
+    public boolean isOperacionBloqueada(String cuenta, String operacion) {
+        if (operacionesBloqueadas == null || cuenta == null || operacion == null) {
+            return false;
+        }
+        Set<String> operaciones = operacionesBloqueadas.get(cuenta);
+        return operaciones != null && operaciones.contains(operacion);
+    }
+    
     public boolean isConnected() {
         return isConnected && stompClient != null && stompClient.isConnected();
     }
