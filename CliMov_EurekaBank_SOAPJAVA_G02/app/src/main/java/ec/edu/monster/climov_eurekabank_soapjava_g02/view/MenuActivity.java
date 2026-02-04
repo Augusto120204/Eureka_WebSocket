@@ -165,7 +165,14 @@ public class MenuActivity extends AppCompatActivity implements WebSocketManager.
         // Liberar operación actual si existe
         liberarOperacionActual();
         
-        // Volver a selección de cuentas
+        // Limpiar cuenta seleccionada
+        sessionManager.setCuentaSeleccionada(null);
+        
+        // Volver a selección de cuentas creando un nuevo Intent
+        // Esto asegura que CuentasActivity se recree si fue destruida
+        Intent intent = new Intent(this, CuentasActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
         finish();
     }
 
@@ -316,6 +323,21 @@ public class MenuActivity extends AppCompatActivity implements WebSocketManager.
         if (sessionManager.getOperacionActual() == null) {
             // Volver desde otra actividad
         }
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Remover el listener pero NO desconectar el WebSocket
+        // porque la sesión del cajero sigue activa
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // NO desconectar el WebSocket aquí porque puede ser que
+        // solo estemos volviendo a CuentasActivity
+        // El WebSocket se desconectará cuando se libere el cajero
     }
     
     @Override
