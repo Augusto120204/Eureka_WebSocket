@@ -35,29 +35,25 @@ public class EmpleadosResponseEnvelope {
 
     @Root(name = "traerEmpleadosResponse", strict = false)
     public static class EmpleadosResponseData {
-        @ElementList(name = "traerEmpleados", inline = true, required = false)
+        @ElementList(name = "empleado", inline = true, required = false)
+        @Namespace(reference = "http://ws.monster.edu.ec/")
         public List<Empleado> empleados;
     }
 
-    @Root(name = "traerEmpleados", strict = false)
+    @Root(name = "empleado", strict = false)
     public static class Empleado {
-        @Element(name = "codigo", required = false)
-        public String codigo;
-
-        @Element(name = "nombre", required = false)
-        public String nombre;
-
-        @Element(name = "paterno", required = false)
-        public String paterno;
-
-        @Element(name = "materno", required = false)
-        public String materno;
-
         @Element(name = "ciudad", required = false)
         public String ciudad;
-
+        @Element(name = "codigo", required = false)
+        public String codigo;
         @Element(name = "direccion", required = false)
         public String direccion;
+        @Element(name = "materno", required = false)
+        public String materno;
+        @Element(name = "nombre", required = false)
+        public String nombre;
+        @Element(name = "paterno", required = false)
+        public String paterno;
 
         public String getCodigo() { return codigo; }
         public String getNombre() { return nombre; }
