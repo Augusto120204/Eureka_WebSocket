@@ -101,6 +101,13 @@ public class RetiroActivity extends AppCompatActivity implements RetiroControlle
                 .enqueue(new Callback<ApiResponse>() {
                     @Override
                     public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                        android.util.Log.d("RetiroActivity", "=== RESPUESTA LIBERAR OPERACION ===");
+                        android.util.Log.d("RetiroActivity", "Operación: " + operacion + ", Cuenta: " + cuenta);
+                        android.util.Log.d("RetiroActivity", "Código HTTP: " + response.code());
+                        if (response.body() != null) {
+                            android.util.Log.d("RetiroActivity", "Éxito: " + response.body().isExito());
+                        }
+                        
                         runOnUiThread(() -> {
                             sessionManager.clearOperacionActual();
                             goToMenu();

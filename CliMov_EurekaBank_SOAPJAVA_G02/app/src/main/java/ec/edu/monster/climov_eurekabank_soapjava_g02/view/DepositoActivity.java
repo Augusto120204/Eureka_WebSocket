@@ -101,6 +101,13 @@ public class DepositoActivity extends AppCompatActivity implements DepositoContr
                 .enqueue(new Callback<ApiResponse>() {
                     @Override
                     public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                        android.util.Log.d("DepositoActivity", "=== RESPUESTA LIBERAR OPERACION ===");
+                        android.util.Log.d("DepositoActivity", "Operación: " + operacion + ", Cuenta: " + cuenta);
+                        android.util.Log.d("DepositoActivity", "Código HTTP: " + response.code());
+                        if (response.body() != null) {
+                            android.util.Log.d("DepositoActivity", "Éxito: " + response.body().isExito());
+                        }
+                        
                         runOnUiThread(() -> {
                             sessionManager.clearOperacionActual();
                             goToMenu();

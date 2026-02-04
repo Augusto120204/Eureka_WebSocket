@@ -166,8 +166,14 @@ public class MenuActivity extends AppCompatActivity implements WebSocketManager.
         RestApiClient.getApiService().bloquearOperacion(cuentaActual, operacion, sessionId)
             .enqueue(new Callback<ApiResponse>() {
                 @Override
-                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                    runOnUiThread(() -> {
+                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {                    android.util.Log.d("MenuActivity", "=== RESPUESTA BLOQUEAR OPERACION ===");
+                    android.util.Log.d("MenuActivity", "Operación: " + operacion + ", Cuenta: " + cuentaActual);
+                    android.util.Log.d("MenuActivity", "Código HTTP: " + response.code());
+                    if (response.body() != null) {
+                        android.util.Log.d("MenuActivity", "Éxito: " + response.body().isExito());
+                        android.util.Log.d("MenuActivity", "Mensaje: " + response.body().getMensaje());
+                    }
+                                        runOnUiThread(() -> {
                         if (response.isSuccessful() && response.body() != null && response.body().isExito()) {
                             // Guardar operación actual
                             sessionManager.setOperacionActual(operacion, cuentaActual);
@@ -184,6 +190,9 @@ public class MenuActivity extends AppCompatActivity implements WebSocketManager.
 
                 @Override
                 public void onFailure(Call<ApiResponse> call, Throwable t) {
+                    android.util.Log.e("MenuActivity", "=== ERROR BLOQUEAR OPERACION ===");
+                    android.util.Log.e("MenuActivity", "Error: " + t.getMessage(), t);
+                    
                     runOnUiThread(() -> {
                         Toast.makeText(MenuActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     });

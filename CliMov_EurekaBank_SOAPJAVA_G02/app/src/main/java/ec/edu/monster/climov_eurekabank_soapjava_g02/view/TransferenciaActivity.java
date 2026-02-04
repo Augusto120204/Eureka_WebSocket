@@ -103,6 +103,13 @@ public class TransferenciaActivity extends AppCompatActivity implements Transfer
                 .enqueue(new Callback<ApiResponse>() {
                     @Override
                     public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                        android.util.Log.d("TransferenciaActivity", "=== RESPUESTA LIBERAR OPERACION ===");
+                        android.util.Log.d("TransferenciaActivity", "Operación: " + operacion + ", Cuenta: " + cuenta);
+                        android.util.Log.d("TransferenciaActivity", "Código HTTP: " + response.code());
+                        if (response.body() != null) {
+                            android.util.Log.d("TransferenciaActivity", "Éxito: " + response.body().isExito());
+                        }
+                        
                         runOnUiThread(() -> {
                             sessionManager.clearOperacionActual();
                             goToMenu();

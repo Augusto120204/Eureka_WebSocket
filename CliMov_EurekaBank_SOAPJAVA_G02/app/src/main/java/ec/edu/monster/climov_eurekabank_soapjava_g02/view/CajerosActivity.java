@@ -102,6 +102,16 @@ public class CajerosActivity extends AppCompatActivity implements WebSocketManag
         soapApiService.performTraerEmpleados(new SoapApiService.EmpleadosCallBack() {
             @Override
             public void onResult(boolean success, List<EmpleadosResponseEnvelope.Empleado> empleados, String resultMessage) {
+                android.util.Log.d("CajerosActivity", "=== RESPUESTA TRAER EMPLEADOS ===");
+                android.util.Log.d("CajerosActivity", "Éxito: " + success);
+                android.util.Log.d("CajerosActivity", "Mensaje: " + resultMessage);
+                if (empleados != null) {
+                    android.util.Log.d("CajerosActivity", "Cantidad empleados: " + empleados.size());
+                    for (EmpleadosResponseEnvelope.Empleado e : empleados) {
+                        android.util.Log.d("CajerosActivity", "  - " + e.getCodigo() + ": " + e.getNombreCompleto());
+                    }
+                }
+                
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
                     
@@ -138,6 +148,14 @@ public class CajerosActivity extends AppCompatActivity implements WebSocketManag
             .enqueue(new Callback<ApiResponse>() {
                 @Override
                 public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                    android.util.Log.d("CajerosActivity", "=== RESPUESTA OCUPAR CAJERO ===");
+                    android.util.Log.d("CajerosActivity", "Código HTTP: " + response.code());
+                    android.util.Log.d("CajerosActivity", "Exitoso: " + response.isSuccessful());
+                    if (response.body() != null) {
+                        android.util.Log.d("CajerosActivity", "Body Éxito: " + response.body().isExito());
+                        android.util.Log.d("CajerosActivity", "Body Mensaje: " + response.body().getMensaje());
+                    }
+                    
                     runOnUiThread(() -> {
                         progressBar.setVisibility(View.GONE);
                         
@@ -159,8 +177,9 @@ public class CajerosActivity extends AppCompatActivity implements WebSocketManag
                 }
 
                 @Override
-                public void onFailure(Call<ApiResponse> call, Throwable t) {
-                    runOnUiThread(() -> {
+                public void onFailure(Call<ApiResponse> call, Throwable t) {                    android.util.Log.e("CajerosActivity", "=== ERROR OCUPAR CAJERO ===");
+                    android.util.Log.e("CajerosActivity", "Error: " + t.getMessage(), t);
+                                        runOnUiThread(() -> {
                         progressBar.setVisibility(View.GONE);
                         mostrarError("Error de conexion: " + t.getMessage());
                     });

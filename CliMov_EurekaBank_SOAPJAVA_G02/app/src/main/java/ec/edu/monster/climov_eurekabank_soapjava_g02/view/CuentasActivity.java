@@ -83,6 +83,16 @@ public class CuentasActivity extends AppCompatActivity {
         soapApiService.performTraerCuentas(new SoapApiService.CuentasCallBack() {
             @Override
             public void onResult(boolean success, List<String> cuentas, String resultMessage) {
+                android.util.Log.d("CuentasActivity", "=== RESPUESTA TRAER CUENTAS ===");
+                android.util.Log.d("CuentasActivity", "Éxito: " + success);
+                android.util.Log.d("CuentasActivity", "Mensaje: " + resultMessage);
+                if (cuentas != null) {
+                    android.util.Log.d("CuentasActivity", "Cantidad cuentas: " + cuentas.size());
+                    for (String cuenta : cuentas) {
+                        android.util.Log.d("CuentasActivity", "  - " + cuenta);
+                    }
+                }
+                
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
                     
