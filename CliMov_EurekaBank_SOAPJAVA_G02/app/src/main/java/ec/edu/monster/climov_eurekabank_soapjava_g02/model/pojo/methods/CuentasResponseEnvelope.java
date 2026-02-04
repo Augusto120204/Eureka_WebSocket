@@ -35,7 +35,7 @@ public class CuentasResponseEnvelope {
 
     @Root(name = "traerCuentasResponse", strict = false)
     public static class CuentasResponseData {
-        @ElementList(name = "traerCuentas", inline = true, required = false, entry = "traerCuentas")
+        @ElementList(name = "cuenta", inline = true, required = false, entry = "cuenta")
         public List<String> cuentas;
     }
 }

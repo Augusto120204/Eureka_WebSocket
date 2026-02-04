@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import ec.edu.monster.climov_eurekabank_soapjava_g02.R;
@@ -33,7 +35,7 @@ public class CuentasActivity extends AppCompatActivity {
     private TextView tvError;
     private ProgressBar progressBar;
     private RecyclerView rvCuentas;
-    private Button btnCambiarCajero;
+    private TextView btnCambiarCajero;
     
     private CuentaAdapter adapter;
 
